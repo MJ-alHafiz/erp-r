@@ -1,197 +1,947 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Respack ERP - Flexible Packaging</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-  .sidebar-active { background: #2563eb; color: white; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Respack ERP</title>
+  <style>
+    :root {
+      --bg: #f4f6f3;
+      --panel: #ffffff;
+      --panel-alt: #f7faf7;
+      --line: #e4e9e5;
+      --text: #17231e;
+      --muted: #66756e;
+      --primary: #0f5d3b;
+      --primary-dark: #0a442a;
+      --secondary: #dfeee7;
+      --danger: #b93a34;
+      --warning: #c98a15;
+      --ok: #1f7a4f;
+      --shadow: 0 10px 28px rgba(19,29,24,0.08);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html,body { margin:0; padding:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); }
+    body { min-height:100vh; }
+    button,input,select,textarea { font: inherit; }
+    button { cursor:pointer; }
+    a { color: inherit; text-decoration: none; }
+    .app-shell { display:grid; grid-template-columns: 220px 1fr; min-height:100vh; }
+    .sidebar { background:#0f1915; color:#e8f1ed; padding:18px 14px; }
+    .brand { font-size: 24px; font-weight:800; letter-spacing:0.04em; padding:8px 10px 18px; }
+    .brand span { color:#7dd7a6; }
+    .nav-group { margin: 18px 0 0; }
+    .nav-label { color:#aab8b0; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; margin:0 10px 8px; }
+    .nav-btn { width:100%; background: transparent; border:0; color:#dfeae5; text-align:left; font-weight:700; padding:11px 12px; border-radius:10px; margin:2px 0; }
+    .nav-btn.active, .nav-btn:hover { background:#163d31; color: white; }
+    .main { padding:28px; }
+    .page { display:none; }
+    .page.active { display:block; }
+    .page-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:18px; }
+    .page-head h1 { margin:0; font-size:30px; }
+    .subtle { color:var(--muted); font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+    .kpi-label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0.08em; }
+    .kpi-value { margin-top:10px; font-size:30px; font-weight:800; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin-bottom:18px; }
+    .panel h2 { margin:0 0 14px; font-size:18px; }
+    .toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .btn { border:0; background:var(--primary); color:#fff; padding:11px 14px; border-radius:8px; font-weight:700; }
+    .btn.secondary { background:var(--secondary); color:var(--text); }
+    .btn.danger { background:var(--danger); }
+    .btn.small { padding:8px 10px; font-size:12px; }
+    .form-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+    .field { display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted); font-weight:700; }
+    .field.full { grid-column: 1 / -1; }
+    .field input, .field select, .field textarea { border:1px solid var(--line); background:#fff; border-radius:8px; padding:10px 12px; color:var(--text); font-weight:500; }
+    .field textarea { min-height:90px; resize:vertical; }
+    .actions { display:flex; gap:8px; margin-top:14px; }
+    .table-wrap { overflow:auto; }
+    table { width:100%; border-collapse: collapse; min-width: 760px; }
+    th { background:var(--panel-alt); text-align:left; padding:10px 12px; color:var(--muted); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; }
+    td { padding:11px 12px; border-top:1px solid var(--line); font-size:13px; }
+    .status { display:inline-block; padding:5px 8px; border-radius:999px; font-size:11px; font-weight:700; text-transform:capitalize; }
+    .status.pending { background:#fff3d6; color:#86550d; }
+    .status.confirmed, .status.pass, .status.completed, .status.received, .status.delivered { background:#e7f7eb; color:#155c34; }
+    .status.in_production, .status.in_progress, .status.planned { background:#e9f1ff; color:#1d3b7a; }
+    .status.cancelled, .status.fail, .status.hold { background:#fdeaea; color:#7f2b2b; }
+    .status.on_hold { background:#fff0d6; color:#915a00; }
+    .empty { color:var(--muted); padding:24px; text-align:center; }
+    .flash { position:fixed; right:20px; bottom:20px; max-width:420px; background:#0f1915; color:#fff; border-radius:10px; padding:12px 14px; box-shadow:var(--shadow); display:none; }
+    .flash.show { display:block; }
+    .flash.error { background:#7a2323; }
+    @media (max-width: 980px) {
+      .app-shell { grid-template-columns:1fr; }
+      .sidebar { display:flex; flex-wrap:wrap; gap:8px; }
+      .nav-group { display:flex; flex-wrap:wrap; margin:0; }
+      .nav-btn { width:auto; }
+      .main { padding:18px; }
+      .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns:1fr; }
+      .grid { grid-template-columns:1fr; }
+      .page-head { flex-direction:column; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex">
-<!-- Sidebar -->
-<div class="w-64 bg-black text-white min-h-screen p-4 fixed">
-  <h1 class="text-xl font-bold mb-1"><i class="fa-solid fa-recycle mr-2 text-blue-400"></i>Respack ERP</h1>
-  <p class="text-xs text-gray-400 mb-6">Sungai Petani - Flexible Packaging</p>
-  <nav class="space-y-1">
-    <button onclick="showPage('dashboard')" id="nav-dashboard" class="sidebar-active w-full text-left p-3 rounded"><i class="fa-solid fa-chart-line mr-2"></i> Dashboard</button>
-    <button onclick="showPage('quotation')" id="nav-quotation" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-calculator mr-2"></i> Quotation Calculator</button>
-    <button onclick="showPage('sales')" id="nav-sales" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-cart-shopping mr-2"></i> Sales Orders</button>
-    <button onclick="showPage('production')" id="nav-production" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-industry mr-2"></i> Production Floor</button>
-    <button onclick="showPage('inventory')" id="nav-inventory" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-boxes-stacked mr-2"></i> Inventory - Resin</button>
-    <button onclick="showPage('qc')" id="nav-qc" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-flask mr-2"></i> QC & Rolls</button>
-  </nav>
-  <div class="absolute bottom-4 text-xs text-gray-500">ISO 9001 Ready | v1.0</div>
-</div>
-
-<!-- Main Content -->
-<div class="ml-64 flex-1 p-8">
-
-  <!-- DASHBOARD -->
-  <div id="page-dashboard" class="page">
-    <h2 class="text-3xl font-bold">Production Dashboard</h2>
-    <div class="grid grid-cols-4 gap-4 mt-6">
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Today Production</p><h3 class="text-3xl font-bold" id="kpi-kg">0 KG</h3><p class="text-green-500 text-sm">+12% vs yesterday</p></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Scrap %</p><h3 class="text-3xl font-bold text-red-500" id="kpi-scrap">2.1%</h3><p class="text-xs">Target < 3%</p></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">OEE</p><h3 class="text-3xl font-bold">84.2%</h3><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:84%"></div></div></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Pending SO</p><h3 class="text-3xl font-bold" id="kpi-so">0</h3><p class="text-xs">Need scheduling</p></div>
-    </div>
-    <div class="bg-white mt-6 p-6 rounded-xl shadow">
-      <h3 class="font-bold mb-4">Machine Status - Extrusion Lines</h3>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="border p-4 rounded"><p class="font-bold">Line 1 - Blown Film</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 120kg/hr</span><p class="text-sm mt-2">Job: WO-1023 - 50mic PE Bag</p></div>
-        <div class="border p-4 rounded"><p class="font-bold">Line 2 - Cast Stretch</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 180kg/hr</span><p class="text-sm mt-2">Job: WO-1024 - 23mic Stretch Film</p></div>
-        <div class="border p-4 rounded"><p class="font-bold">Line 3 - Slitter</p><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">SETUP</span><p class="text-sm mt-2">Next: WO-1025</p></div>
+<body>
+  <div id="auth-screen" class="panel" style="max-width:440px; margin:10vh auto; display:none;">
+    <h2 style="margin-top:0;">RESPACK ERP</h2>
+    <p class="subtle">Secure access for Respack Manufacturing</p>
+    <form id="auth-form">
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" required />
       </div>
-    </div>
+      <div class="field" style="margin-top:12px;">
+        <label>Password</label>
+        <input id="password" type="password" required />
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" id="auth-submit">Sign in</button>
+        <button class="btn secondary" type="button" id="auth-toggle">Create account</button>
+      </div>
+    </form>
+    <div id="auth-message" class="subtle" style="margin-top:12px; color:#7a2323; display:none;"></div>
   </div>
 
-  <!-- QUOTATION -->
-  <div id="page-quotation" class="page hidden">
-    <h2 class="text-3xl font-bold">Quotation Calculator - Respack Formula</h2>
-    <div class="grid grid-cols-2 gap-8 mt-6">
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="grid grid-cols-2 gap-4">
-          <label>Width (mm)<input id="q-width" type="number" value="1000" class="w-full border p-2 rounded mt-1"></label>
-          <label>Length (mm)<input id="q-length" type="number" value="1500" class="w-full border p-2 rounded mt-1"></label>
-          <label>Micron (µ)<input id="q-micron" type="number" value="50" class="w-full border p-2 rounded mt-1"></label>
-          <label>Qty (pcs)<input id="q-qty" type="number" value="5000" class="w-full border p-2 rounded mt-1"></label>
-          <label>Resin Price RM/kg<input id="q-resin" type="number" value="5.2" step="0.1" class="w-full border p-2 rounded mt-1"></label>
-          <label>Margin %<input id="q-margin" type="number" value="25" class="w-full border p-2 rounded mt-1"></label>
+  <div id="app" class="app-shell" style="display:none;">
+    <aside class="sidebar">
+      <div class="brand">RESPACK <span>ERP</span></div>
+      <div class="nav-group">
+        <div class="nav-label">Main</div>
+        <button class="nav-btn active" data-page="dashboard">Overview</button>
+        <button class="nav-btn" data-page="sales">Sales</button>
+        <button class="nav-btn" data-page="purchasing">Purchasing</button>
+        <button class="nav-btn" data-page="production">Production</button>
+        <button class="nav-btn" data-page="inventory">Inventory</button>
+        <button class="nav-btn" data-page="quality">Quality</button>
+        <button class="nav-btn" data-page="dispatch">Dispatch</button>
+        <button class="nav-btn" data-page="finance">Finance</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 id="page-title">Overview</h1>
+          <div class="subtle" id="org-label">Organization</div>
         </div>
-        <button onclick="calcQuote()" class="mt-6 bg-blue-600 text-white w-full p-3 rounded font-bold">Calculate & Create SO</button>
-      </div>
-      <div class="bg-black text-white p-6 rounded-xl">
-        <h3 class="font-bold text-xl mb-4">Cost Breakdown</h3>
-        <div class="space-y-3 text-lg">
-          <p class="flex justify-between"><span>Weight / pc:</span><b id="r-weight">0 g</b></p>
-          <p class="flex justify-between"><span>Total KG:</span><b id="r-totalkg" class="text-yellow-400">0 KG</b></p>
-          <p class="flex justify-between"><span>Material Cost:</span><b id="r-cost">RM 0</b></p>
-          <hr class="border-gray-700">
-          <p class="flex justify-between text-2xl"><span>Sell Price:</span><b id="r-sell" class="text-green-400">RM 0</b></p>
-          <p class="flex justify-between"><span>Per pc:</span><b id="r-perpc">RM 0</b></p>
+        <div class="actions" style="margin-top:0;">
+          <span class="subtle" id="user-label">User</span>
+          <button class="btn secondary small" id="signout">Sign out</button>
         </div>
-        <button onclick="createSOFromQuote()" class="mt-6 bg-white text-black w-full p-2 rounded font-bold">+ Add to Sales Orders</button>
       </div>
-    </div>
+
+      <section id="dashboard" class="page active">
+        <div id="kpis" class="grid"></div>
+        <div class="panel">
+          <h2>Factory performance snapshot</h2>
+          <div id="snippet-table" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="sales" class="page">
+        <div class="panel">
+          <h2>Customer master</h2>
+          <form id="customer-form">
+            <div class="form-grid">
+              <div class="field"><label>Customer code</label><input name="customer_code" required /></div>
+              <div class="field"><label>Customer name</label><input name="customer_name" required /></div>
+              <div class="field"><label>Industry</label><input name="industry" /></div>
+              <div class="field"><label>Credit term</label><input name="credit_term" /></div>
+              <div class="field full"><label>Address</label><textarea name="address"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save customer</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Sales orders</h2>
+          <form id="sales-form">
+            <div class="form-grid">
+              <div class="field"><label>Order number</label><input name="order_number" required /></div>
+              <div class="field"><label>Customer</label><select name="customer_id" id="sales-customer-select" required></select></div>
+              <div class="field"><label>Order date</label><input name="order_date" type="date" required /></div>
+              <div class="field"><label>Due date</label><input name="due_date" type="date" /></div>
+              <div class="field"><label>Product / spec</label><input name="product_spec" required /></div>
+              <div class="field"><label>Quantity (kg)</label><input name="quantity_kg" type="number" step="0.01" required /></div>
+              <div class="field"><label>Sales price (RM/kg)</label><input name="sales_price" type="number" step="0.01" required /></div>
+              <div class="field"><label>Status</label><select name="status"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="in_production">In Production</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+              <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save order</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Customer and order register</h2></div>
+          <div id="sales-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="purchasing" class="page">
+        <div class="panel">
+          <h2>Supplier master</h2>
+          <form id="supplier-form">
+            <div class="form-grid">
+              <div class="field"><label>Supplier code</label><input name="supplier_code" required /></div>
+              <div class="field"><label>Supplier name</label><input name="supplier_name" required /></div>
+              <div class="field"><label>Material category</label><input name="category" /></div>
+              <div class="field"><label>Lead time (days)</label><input name="lead_time_days" type="number" /></div>
+              <div class="field full"><label>Address</label><textarea name="address"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save supplier</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Purchase requisition</h2>
+          <form id="pr-form">
+            <div class="form-grid">
+              <div class="field"><label>Requisition number</label><input name="requisition_number" required /></div>
+              <div class="field"><label>Supplier</label><select name="supplier_id" id="pr-supplier-select" required></select></div>
+              <div class="field"><label>Material</label><select name="material_id" id="pr-material-select" required></select></div>
+              <div class="field"><label>Required quantity</label><input name="quantity" type="number" step="0.01" required /></div>
+              <div class="field"><label>Request date</label><input name="request_date" type="date" required /></div>
+              <div class="field"><label>Status</label><select name="status"><option value="draft">Draft</option><option value="approved">Approved</option><option value="ordered">Ordered</option><option value="received">Received</option></select></div>
+              <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save requisition</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Goods receipt / GRN</h2>
+          <form id="grn-form">
+            <div class="form-grid">
+              <div class="field"><label>Receipt number</label><input name="receipt_number" required /></div>
+              <div class="field"><label>Supplier</label><select name="supplier_id" id="grn-supplier-select" required></select></div>
+              <div class="field"><label>Material</label><select name="material_id" id="grn-material-select" required></select></div>
+              <div class="field"><label>Lot number</label><input name="lot_number" required /></div>
+              <div class="field"><label>Quantity received (kg)</label><input name="quantity" type="number" step="0.01" required /></div>
+              <div class="field"><label>Unit cost (RM/kg)</label><input name="unit_cost" type="number" step="0.01" required /></div>
+              <div class="field"><label>Received date</label><input name="received_at" type="date" required /></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Record goods receipt</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Purchase and receipt register</h2></div>
+          <div id="purchase-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="production" class="page">
+        <div class="panel">
+          <h2>BOM and product formula</h2>
+          <form id="bom-form">
+            <div class="form-grid">
+              <div class="field"><label>Product code</label><input name="product_code" required /></div>
+              <div class="field"><label>Product name</label><input name="product_name" required /></div>
+              <div class="field"><label>Material</label><select name="material_id" id="bom-material-select" required></select></div>
+              <div class="field"><label>Quantity per unit</label><input name="quantity_per_unit" type="number" step="0.01" required /></div>
+              <div class="field"><label>Scrap %</label><input name="scrap_pct" type="number" step="0.01" value="0" /></div>
+              <div class="field"><label>UoM</label><input name="uom" value="kg" /></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save BOM item</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Production route / machine plan</h2>
+          <form id="route-form">
+            <div class="form-grid">
+              <div class="field"><label>Route name</label><input name="route_name" required /></div>
+              <div class="field"><label>Work order</label><select name="work_order_id" id="route-workorder-select" required></select></div>
+              <div class="field"><label>Station</label><input name="station" required /></div>
+              <div class="field"><label>Sequence</label><input name="sequence_no" type="number" required /></div>
+              <div class="field"><label>Target minutes</label><input name="target_minutes" type="number" required /></div>
+              <div class="field"><label>Status</label><select name="status"><option value="planned">Planned</option><option value="in_progress">In Progress</option><option value="completed">Completed</option></select></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save route step</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Production register</h2></div>
+          <div id="production-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="inventory" class="page">
+        <div class="panel">
+          <h2>Material catalog</h2>
+          <form id="material-form">
+            <div class="form-grid">
+              <div class="field"><label>Material code</label><input name="sku" required /></div>
+              <div class="field"><label>Material name</label><input name="name" required /></div>
+              <div class="field"><label>Unit</label><input name="unit" value="kg" /></div>
+              <div class="field"><label>Reorder level</label><input name="reorder_level" type="number" step="0.01" value="0" /></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save material</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Inventory lot balance</h2></div>
+          <div id="inventory-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="quality" class="page">
+        <div class="panel">
+          <h2>Quality roll record</h2>
+          <form id="quality-form">
+            <div class="form-grid">
+              <div class="field"><label>Barcode</label><input name="barcode" required /></div>
+              <div class="field"><label>Work order</label><select name="work_order_id" id="quality-workorder-select" required></select></div>
+              <div class="field"><label>Weight (kg)</label><input name="weight_kg" type="number" step="0.01" required /></div>
+              <div class="field"><label>Thickness (micron)</label><input name="thickness_micron" type="number" step="0.1" /></div>
+              <div class="field"><label>Result</label><select name="result"><option value="pass">Pass</option><option value="fail">Fail</option><option value="hold">Hold</option></select></div>
+              <div class="field"><label>Inspector</label><input name="inspector" /></div>
+              <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save quality record</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Quality log</h2></div>
+          <div id="quality-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="dispatch" class="page">
+        <div class="panel">
+          <h2>Dispatch / delivery</h2>
+          <form id="dispatch-form">
+            <div class="form-grid">
+              <div class="field"><label>Delivery number</label><input name="delivery_number" required /></div>
+              <div class="field"><label>Customer</label><select name="customer_id" id="dispatch-customer-select" required></select></div>
+              <div class="field"><label>Sales order</label><select name="sales_order_id" id="dispatch-order-select" required></select></div>
+              <div class="field"><label>Dispatch date</label><input name="dispatch_date" type="date" required /></div>
+              <div class="field"><label>Quantity (kg)</label><input name="quantity_kg" type="number" step="0.01" required /></div>
+              <div class="field"><label>Destination</label><input name="destination" required /></div>
+              <div class="field"><label>Status</label><select name="status"><option value="planned">Planned</option><option value="dispatched">Dispatched</option><option value="delivered">Delivered</option></select></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save dispatch</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Shipping register</h2></div>
+          <div id="dispatch-register" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="finance" class="page">
+        <div class="panel">
+          <h2>Costing and financial summary</h2>
+          <form id="finance-form">
+            <div class="form-grid">
+              <div class="field"><label>Entry type</label><select name="entry_type"><option value="cost">Cost</option><option value="revenue">Revenue</option><option value="expense">Expense</option></select></div>
+              <div class="field"><label>Reference</label><input name="reference" required /></div>
+              <div class="field"><label>Account code</label><input name="account_code" required /></div>
+              <div class="field"><label>Amount (RM)</label><input name="amount" type="number" step="0.01" required /></div>
+              <div class="field"><label>Entry date</label><input name="entry_date" type="date" required /></div>
+              <div class="field"><label>Notes</label><input name="notes" /></div>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Save finance entry</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><h2 style="margin:0;">Financial register</h2></div>
+          <div id="finance-register" class="table-wrap"></div>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- SALES -->
-  <div id="page-sales" class="page hidden">
-    <div class="flex justify-between"><h2 class="text-3xl font-bold">Sales Orders</h2><button onclick="addDummySO()" class="bg-blue-600 text-white px-4 py-2 rounded">+ New SO</button></div>
-    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
-      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">SO No</th><th class="p-3">Customer</th><th class="p-3">Spec</th><th class="p-3">KG</th><th class="p-3">Amount</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="sales-body"></tbody></table>
-    </div>
-  </div>
+  <div id="flash" class="flash"></div>
 
-  <!-- PRODUCTION -->
-  <div id="page-production" class="page hidden">
-    <h2 class="text-3xl font-bold">Work Orders - Production Floor</h2>
-    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
-      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">WO No</th><th class="p-3">SO No</th><th class="p-3">Machine</th><th class="p-3">Target</th><th class="p-3">Produced</th><th class="p-3">Scrap</th><th class="p-3">Action</th></tr></thead><tbody id="prod-body"></tbody></table>
-    </div>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    (() => {
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => [...document.querySelectorAll(sel)];
+      const flash = $('#flash');
+      let client = null;
+      let org = null;
+      let customers = [];
+      let suppliers = [];
+      let salesOrders = [];
+      let purchaseRequisitions = [];
+      let materials = [];
+      let workOrders = [];
+      let inventoryLots = [];
+      let qualityRolls = [];
+      let deliveries = [];
+      let financeEntries = [];
+      let bomItems = [];
+      let productionRoutes = [];
 
-  <!-- INVENTORY -->
-  <div id="page-inventory" class="page hidden">
-    <h2 class="text-3xl font-bold">Raw Material Inventory - Resin & Masterbatch</h2>
-    <div class="grid grid-cols-3 gap-4 mt-6" id="inv-cards"></div>
-  </div>
+      function showToast(message, isError = false) {
+        flash.textContent = message;
+        flash.classList.toggle('error', isError);
+        flash.classList.add('show');
+        setTimeout(() => flash.classList.remove('show'), 4200);
+      }
 
-  <!-- QC -->
-  <div id="page-qc" class="page hidden">
-    <h2 class="text-3xl font-bold">QC - Roll Tracking & Barcode</h2>
-    <div class="bg-white mt-6 p-6 rounded-xl shadow">
-      <div class="flex gap-4"><input id="qc-barcode" placeholder="Scan barcode e.g. ROLL-2024-001" class="border p-3 rounded flex-1"><button onclick="addRoll()" class="bg-black text-white px-6 rounded">Add Roll</button></div>
-      <table class="w-full mt-6 text-left"><thead class="bg-gray-100"><tr><th class="p-3">Barcode</th><th class="p-3">WO No</th><th class="p-3">Weight</th><th class="p-3">Micron Actual</th><th class="p-3">QC</th></tr></thead><tbody id="qc-body"></tbody></table>
-    </div>
-  </div>
+      function setAuthVisible(isVisible) {
+        $('#auth-screen').style.display = isVisible ? 'block' : 'none';
+        $('#app').style.display = isVisible ? 'none' : 'grid';
+      }
 
-</div>
+      function getUserLabel(user) {
+        return user?.email || 'User';
+      }
 
-<script>
-// --- Data Storage ---
-let salesOrders = JSON.parse(localStorage.getItem('respack_so') || '[]');
-let workOrders = JSON.parse(localStorage.getItem('respack_wo') || '[]');
-let rolls = JSON.parse(localStorage.getItem('respack_rolls') || '[]');
-let inventory = [
-  {name:'LDPE', lot:'LDPE-24-001', qty: 5250, cost: 5.1, supplier:'Petronas'},
-  {name:'LLDPE', lot:'LLDPE-24-002', qty: 3100, cost: 5.3, supplier:'Lotus'},
-  {name:'HDPE', lot:'HDPE-24-003', qty: 1800, cost: 5.0, supplier:'Petronas'},
-  {name:'MB White', lot:'MB-W-001', qty: 450, cost: 8.2, supplier:'Tosaf'},
-  {name:'MB Black', lot:'MB-B-001', qty: 200, cost: 8.5, supplier:'Tosaf'},
-  {name:'Papercore 3 inch', lot:'PC-001', qty: 1200, cost: 1.2, supplier:'Local'},
-];
+      function buttonHandler(selector, cb) {
+        const button = $(selector);
+        if (button) button.addEventListener('click', cb);
+      }
 
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-  document.getElementById('page-'+id).classList.remove('hidden');
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sidebar-active'));
-  document.getElementById('nav-'+id).classList.add('sidebar-active');
-  renderAll();
-}
+      function toStatus(value) {
+        return String(value || 'pending').replace('_', ' ');
+      }
 
-function calcQuote(){
-  const w=+document.getElementById('q-width').value;
-  const l=+document.getElementById('q-length').value;
-  const m=+document.getElementById('q-micron').value;
-  const qty=+document.getElementById('q-qty').value;
-  const resin=+document.getElementById('q-resin').value;
-  const margin=+document.getElementById('q-margin').value;
-  const density=0.92;
-  const weightPerPc = (w*l*m*density*2)/10000000000;
-  const totalKg = weightPerPc*qty;
-  const cost = totalKg*resin;
-  const sell = cost*(1+margin/100);
-  document.getElementById('r-weight').innerText = (weightPerPc*1000).toFixed(1)+' g';
-  document.getElementById('r-totalkg').innerText = totalKg.toFixed(2)+' KG';
-  document.getElementById('r-cost').innerText = 'RM '+cost.toFixed(2);
-  document.getElementById('r-sell').innerText = 'RM '+sell.toFixed(2);
-  document.getElementById('r-perpc').innerText = 'RM '+(sell/qty).toFixed(4);
-  return {w,l,m,qty,totalKg,sell};
-}
+      function renderTable(target, columns, rows, empty = 'No data available.') {
+        const root = $(target);
+        if (!root) return;
+        root.innerHTML = '';
+        if (!rows.length) {
+          root.innerHTML = '<div class="empty">' + empty + '</div>';
+          return;
+        }
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tr = document.createElement('tr');
+        columns.forEach((col) => {
+          const th = document.createElement('th');
+          th.textContent = col;
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        rows.forEach((row) => {
+          const r = document.createElement('tr');
+          row.forEach((cell) => {
+            const td = document.createElement('td');
+            const isStatus = typeof cell === 'string' && /pending|confirmed|completed|cancelled|planned|in_progress|on_hold|pass|fail|hold|dispatched|delivered|received|ordered|approved|draft/gi.test(cell);
+            if (isStatus) {
+              const cls = cell.replace(/\s+/g, '_').toLowerCase();
+              const span = document.createElement('span');
+              span.className = 'status ' + cls;
+              span.textContent = cell;
+              td.appendChild(span);
+            } else {
+              td.textContent = cell ?? '';
+            }
+            r.appendChild(td);
+          });
+          tbody.appendChild(r);
+        });
+        table.appendChild(tbody);
+        root.appendChild(table);
+      }
 
-function createSOFromQuote(){
-  const q=calcQuote();
-  const soNo='SO-'+(1000+salesOrders.length+1);
-  salesOrders.unshift({soNo, customer:'New Customer - Food Packaging', spec: `${q.w}x${q.l}x${q.m}µ`, kg:q.totalKg.toFixed(2), amount:q.sell.toFixed(2), status:'PENDING'});
-  const woNo='WO-'+(1000+workOrders.length+1);
-  workOrders.unshift({woNo, soNo, machine:'Extruder Line 1', target:q.totalKg.toFixed(2), produced:'0', scrap:'0'});
-  save(); showPage('sales'); alert('Sales Order '+soNo+' & Work Order '+woNo+' created!');
-}
+      function renderKpis() {
+        const kpisRoot = $('#kpis');
+        if (!kpisRoot) return;
+        const summary = [
+          ['Open sales orders', salesOrders.filter((x) => !['completed','cancelled'].includes(x.status)).length],
+          ['Purchase requisitions', purchaseRequisitions.length],
+          ['Materials on hand', materials.length],
+          ['Production work orders', workOrders.length],
+          ['Quality pass rate', (qualityRolls.filter((x) => x.result === 'pass').length / Math.max(qualityRolls.length, 1) * 100).toFixed(1) + '%'],
+          ['Dispatches', deliveries.filter((x) => x.status === 'delivered').length],
+          ['Revenue booked', 'RM ' + financeEntries.filter((x) => x.entry_type === 'revenue').reduce((sum, x) => sum + Number(x.amount || 0), 0).toFixed(2)],
+          ['Costs booked', 'RM ' + financeEntries.filter((x) => x.entry_type === 'cost').reduce((sum, x) => sum + Number(x.amount || 0), 0).toFixed(2)]
+        ];
+        kpisRoot.innerHTML = '';
+        summary.forEach(([label, value]) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const labelEl = document.createElement('div');
+          labelEl.className = 'kpi-label';
+          labelEl.textContent = label;
+          const valueEl = document.createElement('div');
+          valueEl.className = 'kpi-value';
+          valueEl.textContent = value;
+          card.appendChild(labelEl); card.appendChild(valueEl); kpisRoot.appendChild(card);
+        });
+      }
 
-function addDummySO(){
-  salesOrders.unshift({soNo:'SO-'+(1000+salesOrders.length+1), customer:'Lotus Foods Sdn Bhd', spec:'800x1200x40µ', kg:(Math.random()*1000+200).toFixed(2), amount:(Math.random()*5000+1000).toFixed(2), status:'PENDING'});
-  save(); renderAll();
-}
+      function renderDashboard() {
+        renderKpis();
 
-function save(){
-  localStorage.setItem('respack_so', JSON.stringify(salesOrders));
-  localStorage.setItem('respack_wo', JSON.stringify(workOrders));
-  localStorage.setItem('respack_rolls', JSON.stringify(rolls));
-}
+        const rows = workOrders.slice(0, 8).map((wo) => [
+          wo.work_order_number || '—',
+          wo.machine || '—',
+          String(wo.status || 'planned'),
+          String(wo.target_kg ?? 0),
+          String(wo.produced_kg ?? 0)
+        ]);
+        renderTable('#snippet-table', ['WO No', 'Machine', 'Status', 'Target kg', 'Produced kg'], rows, 'No work orders found.');
+      }
 
-function renderAll(){
-  document.getElementById('sales-body').innerHTML = salesOrders.map(s=>`<tr class="border-b"><td class="p-3 font-bold">${s.soNo}</td><td class="p-3">${s.customer}</td><td class="p-3">${s.spec}</td><td class="p-3">${s.kg} KG</td><td class="p-3">RM ${s.amount}</td><td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${s.status}</span></td><td class="p-3"><button onclick="convertToProd('${s.soNo}')" class="text-blue-600">→ Production</button></td></tr>`).join('') || '<tr><td colspan=7 class="p-6 text-center text-gray-400">No orders yet. Use Quotation Calculator.</td></tr>';
-  document.getElementById('prod-body').innerHTML = workOrders.map(w=>`<tr class="border-b"><td class="p-3 font-bold">${w.woNo}</td><td class="p-3">${w.soNo}</td><td class="p-3">${w.machine}</td><td class="p-3">${w.target} KG</td><td class="p-3"><input type="number" value="${w.produced}" onchange="updateProd('${w.woNo}', 'produced', this.value)" class="w-20 border p-1"></td><td class="p-3"><input type="number" value="${w.scrap}" onchange="updateProd('${w.woNo}', 'scrap', this.value)" class="w-20 border p-1"></td><td class="p-3"><button onclick="completeWO('${w.woNo}')" class="bg-green-600 text-white px-3 py-1 rounded text-xs">Complete</button></td></tr>`).join('');
-  document.getElementById('inv-cards').innerHTML = inventory.map(i=>`<div class="bg-white p-4 rounded-xl shadow"><p class="font-bold">${i.name}</p><p class="text-xs text-gray-500">${i.lot} | ${i.supplier}</p><p class="text-2xl font-bold mt-2">${i.qty} KG</p><p class="text-sm">RM ${i.cost}/kg | Value RM ${(i.qty*i.cost).toFixed(2)}</p><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:${Math.min(i.qty/50,100)}%"></div></div></div>`).join('');
-  document.getElementById('qc-body').innerHTML = rolls.map(r=>`<tr class="border-b"><td class="p-3 font-mono">${r.barcode}</td><td class="p-3">${r.woNo}</td><td class="p-3">${r.weight} KG</td><td class="p-3">${r.micron} µ</td><td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">${r.qc}</span></td></tr>`).join('') || '<tr><td colspan=5 class="p-6 text-center text-gray-400">No rolls scanned</td></tr>';
-  document.getElementById('kpi-kg').innerText = workOrders.reduce((a,b)=>a+parseFloat(b.produced||0),0).toFixed(0)+' KG';
-  document.getElementById('kpi-so').innerText = salesOrders.length;
-}
+      function renderSales() {
+        const customerRows = customers.map((c) => [c.customer_code || '—', c.customer_name || '—', c.industry || '—', c.credit_term || '—']);
+        renderTable('#sales-register', ['Code', 'Customer', 'Industry', 'Terms'], customerRows, 'No customers');
 
-function convertToProd(soNo){ showPage('production'); }
-function updateProd(woNo, field, val){ const w=workOrders.find(x=>x.woNo==woNo); w[field]=val; save(); }
-function completeWO(woNo){ alert(woNo+' marked complete, ready for QC'); }
-function addRoll(){
-  const code=document.getElementById('qc-barcode').value || 'ROLL-'+Date.now();
-  const woNo=workOrders[0]?.woNo || 'WO-1001';
-  rolls.unshift({barcode:code, woNo, weight:(Math.random()*50+20).toFixed(1), micron:(48+Math.random()*4).toFixed(1), qc:'PASS'});
-  save(); renderAll(); document.getElementById('qc-barcode').value='';
-}
-calcQuote(); renderAll();
-</script>
+        populateSelect('#sales-customer-select', customers.map((c) => ({ value: c.id, label: c.customer_code + ' - ' + c.customer_name })), true);
+      }
+
+      function renderPurchasing() {
+        populateSelect('#pr-supplier-select', suppliers.map((s) => ({ value: s.id, label: s.supplier_code + ' - ' + s.supplier_name })), true);
+        populateSelect('#pr-material-select', materials.map((m) => ({ value: m.id, label: m.sku + ' - ' + m.name })), true);
+        populateSelect('#grn-supplier-select', suppliers.map((s) => ({ value: s.id, label: s.supplier_code + ' - ' + s.supplier_name })), true);
+        populateSelect('#grn-material-select', materials.map((m) => ({ value: m.id, label: m.sku + ' - ' + m.name })), true);
+
+        const rows = [...purchaseRequisitions.map((pr) => [
+          pr.requisition_number || '—',
+          suppliers.find((s) => s.id === pr.supplier_id)?.supplier_name || '—',
+          materials.find((m) => m.id === pr.material_id)?.sku || '—',
+          String(pr.quantity || 0),
+          String(pr.status || 'draft')
+        ]), ...inventoryLots.map((lot) => [
+          'GRN - ' + (lot.lot_number || '—'),
+          materials.find((m) => m.id === lot.material_id)?.name || '—',
+          'Lot',
+          String(lot.quantity_on_hand || 0),
+          'received'
+        ])];
+        renderTable('#purchase-register', ['Requisition / receipt', 'Supplier', 'Material', 'Qty', 'Status'], rows, 'No purchase records');
+      }
+
+      function renderProduction() {
+        populateSelect('#route-workorder-select', workOrders.map((w) => ({ value: w.id, label: w.work_order_number })), true);
+        populateSelect('#bom-material-select', materials.map((m) => ({ value: m.id, label: m.sku + ' - ' + m.name })), true);
+        const rows = [...workOrders.map((wo) => [
+          wo.work_order_number || '—',
+          wo.machine || '—',
+          String(wo.target_kg || 0),
+          String(wo.produced_kg || 0),
+          String(wo.scrap_kg || 0),
+          String(wo.status || 'planned')
+        ]), ...bomItems.map((b) => [
+          b.product_code || '—',
+          b.product_name || '—',
+          String(b.quantity_per_unit || 0),
+          String(b.scrap_pct || 0),
+          materials.find((m) => m.id === b.material_id)?.sku || '—',
+          'BOM'
+        ])];
+        renderTable('#production-register', ['Reference', 'Machine / product', 'Target', 'Produced', 'Scrap', 'Status'], rows, 'No production data');
+      }
+
+      function renderInventory() {
+        const rows = inventoryLots.map((lot) => [
+          materials.find((m) => m.id === lot.material_id)?.sku || '—',
+          materials.find((m) => m.id === lot.material_id)?.name || '—',
+          lot.lot_number || '—',
+          String(lot.quantity_on_hand || 0),
+          String(lot.unit_cost || 0),
+          new Date(lot.received_at || Date.now()).toISOString().slice(0,10)
+        ]);
+        renderTable('#inventory-register', ['SKU', 'Material', 'Lot', 'On hand', 'Unit cost', 'Received'], rows, 'No inventory lots');
+      }
+
+      function renderQuality() {
+        populateSelect('#quality-workorder-select', workOrders.map((w) => ({ value: w.id, label: w.work_order_number })), true);
+        const rows = qualityRolls.map((q) => [
+          q.barcode || '—',
+          workOrders.find((w) => w.id === q.work_order_id)?.work_order_number || '—',
+          String(q.weight_kg || 0),
+          String(q.thickness_micron || 0),
+          String(q.result || 'pass'),
+          q.inspector || '—'
+        ]);
+        renderTable('#quality-register', ['Barcode', 'WO', 'Weight', 'Thickness', 'Result', 'Inspector'], rows, 'No quality log');
+      }
+
+      function renderDispatch() {
+        populateSelect('#dispatch-customer-select', customers.map((c) => ({ value: c.id, label: c.customer_name })), true);
+        populateSelect('#dispatch-order-select', salesOrders.map((s) => ({ value: s.id, label: s.order_number + ' - ' + s.product_spec })), true);
+        const rows = deliveries.map((d) => [
+          d.delivery_number || '—',
+          customers.find((c) => c.id === d.customer_id)?.customer_name || '—',
+          salesOrders.find((s) => s.id === d.sales_order_id)?.order_number || '—',
+          d.destination || '—',
+          String(d.quantity_kg || 0),
+          String(d.status || 'planned')
+        ]);
+        renderTable('#dispatch-register', ['Delivery', 'Customer', 'Order', 'Destination', 'Qty', 'Status'], rows, 'No dispatches');
+      }
+
+      function renderFinance() {
+        const rows = financeEntries.map((f) => [
+          String(f.entry_type || 'cost'),
+          f.reference || '—',
+          f.account_code || '—',
+          'RM ' + Number(f.amount || 0).toFixed(2),
+          new Date(f.entry_date || Date.now()).toISOString().slice(0,10),
+          f.notes || '—'
+        ]);
+        renderTable('#finance-register', ['Type', 'Reference', 'Account', 'Amount', 'Date', 'Notes'], rows, 'No finance entries');
+      }
+
+      function populateSelect(selector, options, includeBlank = false) {
+        const el = $(selector);
+        if (!el) return;
+        const current = el.value;
+        el.innerHTML = '';
+        if (includeBlank) el.appendChild(new Option('Select', ''));
+        options.forEach((opt) => el.appendChild(new Option(opt.label, opt.value)));
+        if (current) el.value = current;
+      }
+
+      async function fetchAll() {
+        if (!client || !org) return;
+        const orgId = org.organization_id;
+        const [customersData, suppliersData, salesData, requisitionsData, materialsData, workOrdersData, inventoryLotsData, qualityData, deliveriesData, financeData, bomData, routesData] = await Promise.all([
+          client.from('customers').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('suppliers').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('sales_orders').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('purchase_requisitions').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('materials').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('work_orders').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('inventory_lots').select('*').eq('organization_id', orgId).order('received_at', { ascending: false }),
+          client.from('quality_rolls').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('deliveries').select('*').eq('organization_id', orgId).order('dispatch_date', { ascending: false }),
+          client.from('financial_entries').select('*').eq('organization_id', orgId).order('entry_date', { ascending: false }),
+          client.from('bom_items').select('*').eq('organization_id', orgId).order('created_at', { ascending: false }),
+          client.from('production_routes').select('*').eq('organization_id', orgId).order('sequence_no', { ascending: true })
+        ]);
+        customers = customersData.data || [];
+        suppliers = suppliersData.data || [];
+        salesOrders = salesData.data || [];
+        purchaseRequisitions = requisitionsData.data || [];
+        materials = materialsData.data || [];
+        workOrders = workOrdersData.data || [];
+        inventoryLots = inventoryLotsData.data || [];
+        qualityRolls = qualityData.data || [];
+        deliveries = deliveriesData.data || [];
+        financeEntries = financeData.data || [];
+        bomItems = bomData.data || [];
+        productionRoutes = routesData.data || [];
+
+        renderSales();
+        renderPurchasing();
+        renderProduction();
+        renderInventory();
+        renderQuality();
+        renderDispatch();
+        renderFinance();
+        renderDashboard();
+      }
+
+      async function initSession(user) {
+        $('#user-label').textContent = getUserLabel(user);
+        const memberships = await client.from('organization_members').select('organization_id, role, organizations(name)').eq('user_id', user.id);
+        if (memberships.error) throw memberships.error;
+        if (!memberships.data || !memberships.data.length) {
+          setAuthVisible(true);
+          $('#auth-message').style.display = 'block';
+          $('#auth-message').textContent = 'Your account has not been assigned to a Respack organization yet.';
+          return;
+        }
+        org = memberships.data[0];
+        $('#org-label').textContent = org.organizations?.name || 'Respack Manufacturing';
+        setAuthVisible(false);
+        $('#app').style.display = 'grid';
+        await fetchAll();
+      }
+
+      async function ensureClient() {
+        if (!window.RESPACK_CONFIG?.supabaseUrl || !window.RESPACK_CONFIG?.supabaseAnonKey || !window.supabase) {
+          $('#auth-screen').style.display = 'block';
+          $('#auth-message').style.display = 'block';
+          $('#auth-message').textContent = 'Set your Supabase URL and anon key in config.js.';
+          return;
+        }
+        client = window.supabase.createClient(window.RESPACK_CONFIG.supabaseUrl, window.RESPACK_CONFIG.supabaseAnonKey);
+        const { data: sessionData, error } = await client.auth.getSession();
+        if (error) {
+          $('#auth-message').style.display = 'block';
+          $('#auth-message').textContent = error.message;
+          return;
+        }
+        if (!sessionData.session) {
+          setAuthVisible(true);
+          return;
+        }
+        await initSession(sessionData.session.user);
+      }
+
+      function bindForms() {
+        $('#auth-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = $('#email').value;
+          const password = $('#password').value;
+          if (!client) return;
+          const isNew = $('#auth-submit').textContent === 'Create account';
+          try {
+            const result = isNew ? await client.auth.signUp({ email, password }) : await client.auth.signInWithPassword({ email, password });
+            if (result.error) throw result.error;
+            if (isNew && result.data.user && !result.data.session) {
+              $('#auth-message').style.display = 'block';
+              $('#auth-message').textContent = 'Account created. Check email for confirmation, then sign in.';
+              return;
+            }
+            await initSession(result.data.user || result.data.session.user);
+          } catch (err) {
+            $('#auth-message').style.display = 'block';
+            $('#auth-message').textContent = err.message || 'Authentication failed';
+          }
+        });
+
+        $('#auth-toggle').addEventListener('click', () => {
+          const togglingToCreate = $('#auth-submit').textContent !== 'Create account';
+          $('#auth-submit').textContent = togglingToCreate ? 'Create account' : 'Sign in';
+          $('#auth-toggle').textContent = togglingToCreate ? 'Back to sign in' : 'Create account';
+        });
+
+        $('#signout').addEventListener('click', async () => {
+          if (!client) return;
+          await client.auth.signOut();
+          org = null;
+          setAuthVisible(true);
+        });
+
+        $('#customer-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('customers').insert({ ...data, organization_id: org.organization_id });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Customer saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Customer save failed', true); }
+        });
+
+        $('#sales-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('sales_orders').insert({
+              organization_id: org.organization_id,
+              order_number: data.order_number,
+              customer_id: data.customer_id || null,
+              order_date: data.order_date,
+              due_date: data.due_date || null,
+              product_spec: data.product_spec,
+              quantity_kg: Number(data.quantity_kg),
+              sales_price: Number(data.sales_price),
+              status: data.status,
+              notes: data.notes || '',
+              created_by: (await client.auth.getUser()).data.user.id
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Sales order saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Sales order save failed', true); }
+        });
+
+        $('#supplier-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('suppliers').insert({ ...data, organization_id: org.organization_id });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Supplier saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Supplier save failed', true); }
+        });
+
+        $('#pr-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('purchase_requisitions').insert({
+              organization_id: org.organization_id,
+              requisition_number: data.requisition_number,
+              supplier_id: data.supplier_id,
+              material_id: data.material_id,
+              quantity: Number(data.quantity),
+              request_date: data.request_date,
+              status: data.status,
+              notes: data.notes || '',
+              created_by: (await client.auth.getUser()).data.user.id
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Purchase requisition saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Purchase requisition save failed', true); }
+        });
+
+        $('#grn-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const result = await client.rpc('record_goods_receipt', {
+              p_organization_id: org.organization_id,
+              p_supplier_id: data.supplier_id,
+              p_material_id: data.material_id,
+              p_lot_number: data.lot_number,
+              p_quantity: Number(data.quantity),
+              p_unit_cost: Number(data.unit_cost),
+              p_receipt_number: data.receipt_number,
+              p_received_at: data.received_at
+            });
+            if (result.error) throw result.error;
+            e.target.reset();
+            showToast('Goods receipt recorded');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Goods receipt failed', true); }
+        });
+
+        $('#material-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('materials').insert({
+              organization_id: org.organization_id,
+              sku: data.sku,
+              name: data.name,
+              unit: data.unit || 'kg',
+              reorder_level: Number(data.reorder_level || 0)
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Material saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Material save failed', true); }
+        });
+
+        $('#bom-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('bom_items').insert({
+              organization_id: org.organization_id,
+              product_code: data.product_code,
+              product_name: data.product_name,
+              material_id: data.material_id,
+              quantity_per_unit: Number(data.quantity_per_unit),
+              scrap_pct: Number(data.scrap_pct || 0),
+              uom: data.uom || 'kg'
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('BOM item saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'BOM save failed', true); }
+        });
+
+        $('#route-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('production_routes').insert({
+              organization_id: org.organization_id,
+              route_name: data.route_name,
+              work_order_id: data.work_order_id,
+              station: data.station,
+              sequence_no: Number(data.sequence_no),
+              target_minutes: Number(data.target_minutes),
+              status: data.status || 'planned'
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Route saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Route save failed', true); }
+        });
+
+        $('#quality-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('quality_rolls').insert({
+              organization_id: org.organization_id,
+              work_order_id: data.work_order_id,
+              barcode: data.barcode,
+              weight_kg: Number(data.weight_kg),
+              thickness_micron: data.thickness_micron ? Number(data.thickness_micron) : null,
+              result: data.result || 'pass',
+              inspector: data.inspector || '',
+              notes: data.notes || '',
+              created_by: (await client.auth.getUser()).data.user.id
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Quality record saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Quality save failed', true); }
+        });
+
+        $('#dispatch-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('deliveries').insert({
+              organization_id: org.organization_id,
+              delivery_number: data.delivery_number,
+              customer_id: data.customer_id,
+              sales_order_id: data.sales_order_id,
+              dispatch_date: data.dispatch_date,
+              quantity_kg: Number(data.quantity_kg),
+              destination: data.destination,
+              status: data.status || 'planned'
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Dispatch saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Dispatch save failed', true); }
+        });
+
+        $('#finance-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          try {
+            const resp = await client.from('financial_entries').insert({
+              organization_id: org.organization_id,
+              entry_type: data.entry_type || 'cost',
+              reference: data.reference,
+              account_code: data.account_code,
+              amount: Number(data.amount),
+              entry_date: data.entry_date,
+              notes: data.notes || ''
+            });
+            if (resp.error) throw resp.error;
+            e.target.reset();
+            showToast('Finance entry saved');
+            await fetchAll();
+          } catch (err) { showToast(err.message || 'Finance save failed', true); }
+        });
+
+        document.querySelectorAll('.nav-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const page = btn.dataset.page;
+            document.querySelectorAll('.nav-btn').forEach((b) => b.classList.toggle('active', b === btn));
+            document.querySelectorAll('.page').forEach((pageEl) => pageEl.classList.toggle('active', pageEl.id === page));
+            $('#page-title').textContent = btn.textContent.trim();
+          });
+        });
+      }
+
+      async function startup() {
+        bindForms();
+        await ensureClient();
+      }
+
+      startup();
+    })();
+  </script>
 </body>
 </html>

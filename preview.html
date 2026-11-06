@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Respack ERP — Demo</title>
+  <style>
+    :root {
+      --bg: #edf3ef;
+      --panel: #ffffff;
+      --panel-2: #f6faf7;
+      --ink: #17231e;
+      --muted: #5d6f68;
+      --brand: #10251f;
+      --brand-2: #7ccaa3;
+      --line: #dfe9e2;
+      --primary: #145d3b;
+      --primary-2: #0d472d;
+      --warning: #f2c36a;
+      --danger: #a73f3f;
+      --info: #e8efff;
+      --success: #e1f5ea;
+      --shadow: 0 12px 26px rgba(17, 35, 28, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 14px/1.45 Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .hidden { display: none !important; }
+
+    .auth-shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eef5f0, #f8f1df);
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(430px, 100%);
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brandmark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .brandmark .tag {
+      color: var(--brand-2);
+    }
+
+    .subhead {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 13px;
+    }
+
+    .form-wrap {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px 13px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(20,93,59,0.08);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.16s;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      padding: 12px 16px;
+    }
+
+    .btn-primary:hover { background: var(--primary-2); }
+
+    .btn-secondary {
+      background: #eaf3ee;
+      color: var(--primary);
+      padding: 9px 12px;
+    }
+
+    .btn-secondary:hover { background: #dfeee3; }
+
+    .notice {
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      background: #f8f4e8;
+      color: #865d11;
+      border-color: #ecd89a;
+    }
+
+    .notice.error {
+      background: #fff1f1;
+      color: #8d2f2f;
+      border-color: #f0c2c2;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--brand);
+      color: white;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .sidebar-brand {
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+      padding: 8px 8px 0 8px;
+    }
+
+    .sidebar-brand span { color: var(--brand-2); }
+
+    .navlist {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: rgba(255,255,255,0.82);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-btn.active {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.12);
+      color: white;
+    }
+
+    .sidebar-foot {
+      margin-top: auto;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .main {
+      padding: 20px 24px 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(255,255,255,0.4);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar small {
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .userbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dfece4;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .meta {
+      display: grid;
+      text-align: right;
+      gap: 2px;
+    }
+
+    .meta strong { font-size: 13px; }
+    .meta span { font-size: 11px; color: var(--muted); }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 17px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel-2);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 10px;
+    }
+
+    td.small { color: var(--muted); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: capitalize;
+      letter-spacing: 0.02em;
+    }
+
+    .status.approved,
+    .status.completed,
+    .status.pass,
+    .status.delivered,
+    .status.matched,
+    .status.confirmed,
+    .status.dispatched {
+      background: var(--success);
+      color: #1b613f;
+    }
+
+    .status.pending,
+    .status.planned,
+    .status.pending_approval,
+    .status.hold,
+    .status.in_progress,
+    .status.review,
+    .status.ordered {
+      background: #fff4d8;
+      color: #7a5a17;
+    }
+
+    .status.cancelled,
+    .status.fail,
+    .status.inactive {
+      background: #ffe4e4;
+      color: #8b3d3d;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .form-grid .field.full { grid-column: 1 / -1; }
+
+    .panel form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .empty-cell {
+      color: var(--muted);
+      font-style: italic;
+      padding: 16px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      background: #eef5ef;
+      color: var(--primary);
+      border: 1px solid #dfeee3;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .report-box {
+      background: linear-gradient(135deg, #fdfefb, #f2f8f4);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    @media (max-width: 1000px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { padding-bottom: 10px; }
+      .navlist { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
+      .content-grid { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .main { padding: 15px; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .kpis { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .navlist { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div id="authView" class="auth-shell">
+    <div class="auth-card">
+      <div class="brandmark">RESPACK <span class="tag">ERP</span></div>
+      <div class="subhead">Demo access for the fictional Respack manufacturing ERP.</div>
+      <div id="authNotice" class="notice hidden"></div>
+      <form id="loginForm" class="form-wrap">
+        <label class="field">
+          Email
+          <input id="email" type="email" value="admin@respack.demo" required />
+        </label>
+        <label class="field">
+          Password
+          <input id="password" type="password" value="respack123" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+      <div class="muted" style="margin-top:16px; font-size:11px;">Demo credentials: admin@respack.demo / respack123</div>
+    </div>
+  </div>
+
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">RESPACK <span>ERP</span></div>
+      <nav class="navlist" id="navList"></nav>
+      <div class="sidebar-foot">
+        <div><strong>Demo tenant</strong></div>
+        <div id="tenantName">Respack Manufacturing</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1 id="pageTitle">Overview</h1>
+          <small id="pageSub">Manufacturing operations dashboard</small>
+        </div>
+        <div class="userbox">
+          <div class="avatar" id="userAvatar">A</div>
+          <div class="meta">
+            <strong id="userName">Admin</strong>
+            <span id="userEmail">admin@respack.demo</span>
+          </div>
+          <button class="btn btn-secondary" id="logoutBtn" type="button">Logout</button>
+        </div>
+      </div>
+
+      <div id="content"></div>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'respack-demo-v2';
+      const DEMO_USER = { email: 'admin@respack.demo', name: 'Admin User', password: 'respack123' };
+
+      const navItems = [
+        { key: 'overview', label: 'Overview' },
+        { key: 'customers', label: 'Customers' },
+        { key: 'orders', label: 'Orders' },
+        { key: 'purchasing', label: 'Purchasing' },
+        { key: 'inventory', label: 'Inventory' },
+        { key: 'production', label: 'Production' },
+        { key: 'quality', label: 'Quality' },
+        { key: 'dispatch', label: 'Dispatch' },
+        { key: 'finance', label: 'Finance' }
+      ];
+
+      const state = {
+        active: 'overview',
+        loggedIn: false,
+        data: null,
+        user: null
+      };
+
+      const authView = document.getElementById('authView');
+      const appView = document.getElementById('appView');
+      const content = document.getElementById('content');
+      const pageTitle = document.getElementById('pageTitle');
+      const pageSub = document.getElementById('pageSub');
+      const authNotice = document.getElementById('authNotice');
+      const loginForm = document.getElementById('loginForm');
+      const navList = document.getElementById('navList');
+      const userName = document.getElementById('userName');
+      const userEmail = document.getElementById('userEmail');
+      const userAvatar = document.getElementById('userAvatar');
+      const tenantName = document.getElementById('tenantName');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      const money = (value) => `RM ${Number(value || 0).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const id = (prefix) => `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
+      const statusClass = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+      function setNotice(message, isError = false) {
+        authNotice.textContent = message;
+        authNotice.classList.toggle('hidden', !message);
+        authNotice.classList.toggle('error', isError);
+      }
+
+      function loadDemoData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          state.data = JSON.parse(saved);
+          return;
+        }
+        fetch('./demo-data.json')
+          .then((res) => res.json())
+          .then((data) => {
+            state.data = data;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          })
+          .catch(() => {
+            state.data = {
+              notice: 'Fictional data fallback loaded.',
+              currency: 'MYR',
+              customers: [{ id: 'CUS-001', code: 'C-1001', name: 'Meridian Pantry Foods', industry: 'Food packaging', terms: '30 days' }],
+              suppliers: [{ id: 'SUP-001', code: 'S-2001', name: 'Polymer Supply Demo Sdn. Bhd.', category: 'Resin', leadDays: 7 }],
+              materials: [{ id: 'MAT-001', sku: 'LDPE-01', name: 'LDPE resin', unit: 'kg', reorderLevel: 2000 }],
+              salesOrders: [{ id: 'SO-001', number: 'SO-DEMO-001', customerId: 'CUS-001', date: '2026-11-06', due: '2026-11-20', product: 'Flexible pack film', quantityKg: 1200, pricePerKg: 8.2, status: 'pending' }],
+              purchaseRequisitions: [],
+              goodsReceipts: [],
+              inventoryLots: [],
+              materialIssues: [],
+              bomItems: [],
+              workOrders: [],
+              productionRoutes: [],
+              laborEntries: [],
+              maintenanceEvents: [],
+              qualityRolls: [],
+              deliveries: [],
+              financialEntries: [],
+              managementReports: { period: 'Demo period', productionTargetKg: 0, productionActualKg: 0, scrapKg: 0, onTimeDeliveryPercent: 0, openOrderValueMYR: 0, materialInventoryValueMYR: 0, notes: 'Fallback dataset' }
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+          });
+      }
+
+      function buildNav() {
+        navList.innerHTML = '';
+        navItems.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'nav-btn' + (state.active === item.key ? ' active' : '');
+          btn.textContent = item.label;
+          btn.addEventListener('click', () => {
+            state.active = item.key;
+            buildNav();
+            render();
+          });
+          navList.appendChild(btn);
+        });
+      }
+
+      function renderHeader() {
+        const active = navItems.find((n) => n.key === state.active);
+        pageTitle.textContent = active ? active.label : 'Overview';
+        pageSub.textContent = active === 'overview' ? 'Manufacturing operations dashboard' : 'Demo tenant operational view';
+        if (state.user) {
+          userName.textContent = state.user.name;
+          userEmail.textContent = state.user.email;
+          userAvatar.textContent = state.user.name.split(' ').map((token) => token[0]).slice(0, 2).join('').toUpperCase();
+        }
+        tenantName.textContent = 'Respack Manufacturing';
+      }
+
+      function renderTable(headers, rows, emptyText = 'No records found.') {
+        if (!rows.length) {
+          const box = document.createElement('div');
+          box.className = 'empty-cell';
+          box.textContent = emptyText;
+          return box;
+        }
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        headers.forEach((header) => {
+          const th = document.createElement('th');
+          th.textContent = header;
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        rows.forEach((row) => {
+          const tr = document.createElement('tr');
+          row.forEach((cell, index) => {
+            const td = document.createElement('td');
+            const text = cell == null ? '—' : String(cell);
+            if (index === row.length - 1 && /^[a-z_\-]+$/i.test(text.replace(/\s+/g, '_'))) {
+              const badge = document.createElement('span');
+              const klass = statusClass(text);
+              badge.className = 'status ' + klass;
+              badge.textContent = text.replace(/_/g, ' ');
+              td.appendChild(badge);
+            } else {
+              td.textContent = text;
+            }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        return table;
+      }
+
+      function renderPanel(title, body, actions = null) {
+        const panel = document.createElement('section');
+        panel.className = 'panel';
+
+        const head = document.createElement('div');
+        head.className = 'panel-head';
+        const h2 = document.createElement('h2');
+        h2.textContent = title;
+        head.appendChild(h2);
+        if (actions) head.appendChild(actions);
+        panel.appendChild(head);
+        panel.appendChild(body);
+        return panel;
+      }
+
+      function renderOverview() {
+        const d = state.data;
+        const kpis = [
+          { label: 'Open sales orders', value: d.salesOrders.filter((x) => !['completed', 'cancelled'].includes(x.status)).length, sub: 'Active demand' },
+          { label: 'Active work orders', value: d.workOrders.filter((x) => x.status === 'in_progress').length, sub: 'Production queue' },
+          { label: 'Production output', value: `${d.workOrders.reduce((sum, x) => sum + Number(x.producedKg || 0), 0)} kg`, sub: 'This demo cycle' },
+          { label: 'QC pass rate', value: `${Math.round((d.qualityRolls.filter((x) => x.result === 'pass').length / Math.max(d.qualityRolls.length, 1)) * 100)}%`, sub: 'Quality acceptance' }
+        ];
+
+        const wrap = document.createElement('div');
+        wrap.className = 'kpis';
+        kpis.forEach((kpi) => {
+          const card = document.createElement('div');
+          card.className = 'kpi';
+          card.innerHTML = `<div class="kpi-label">${kpi.label}</div><div class="kpi-value">${kpi.value}</div><div class="kpi-sub">${kpi.sub}</div>`;
+          wrap.appendChild(card);
+        });
+
+        const twoCol = document.createElement('div');
+        twoCol.className = 'content-grid';
+
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Recent work orders', renderTable(
+          ['Work order', 'Sales order', 'Machine', 'Target kg', 'Produced kg', 'Scrap kg', 'Status'],
+          d.workOrders.map((wo) => {
+            const sales = d.salesOrders.find((so) => so.id === wo.salesOrderId);
+            return [wo.number, sales ? sales.number : '—', wo.machine || '—', Number(wo.targetKg || 0), Number(wo.producedKg || 0), Number(wo.scrapKg || 0), wo.status || 'planned'];
+          })
+        )));
+
+        const right = document.createElement('div');
+        right.appendChild(renderPanel('Management snapshot', renderTable(
+          ['Metric', 'Value', 'Note'],
+          [
+            ['Reporting period', d.managementReports.period, 'Fictional only'],
+            ['Production target', `${d.managementReports.productionTargetKg} kg`, 'Studio demo'],
+            ['Scrap', `${d.managementReports.scrapKg} kg`, 'Illustrative only'],
+            ['On-time delivery', `${d.managementReports.onTimeDeliveryPercent}%`, 'Not live'],
+            ['Open order value', money(d.managementReports.openOrderValueMYR), 'Preview estimate'],
+            ['Inventory value', money(d.managementReports.materialInventoryValueMYR), 'Not a ledger']
+          ]
+        )));
+
+        twoCol.appendChild(left);
+        twoCol.appendChild(right);
+
+        content.appendChild(wrap);
+        content.appendChild(twoCol);
+      }
+
+      function renderCustomers() {
+        const d = state.data;
+        const tableData = d.customers.map((row) => [row.code, row.name, row.industry, row.terms]);
+
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              Customer code
+              <input name="code" required placeholder="C-1015" />
+            </label>
+            <label class="field">
+              Customer name
+              <input name="name" required placeholder="Northfield Packaging" />
+            </label>
+            <label class="field">
+              Industry
+              <input name="industry" required placeholder="Food packaging" />
+            </label>
+            <label class="field">
+              Terms
+              <input name="terms" required placeholder="30 days" />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Add customer</button>
+        `;
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const customer = {
+            id: id('CUS'),
+            code: formData.get('code').toString().trim(),
+            name: formData.get('name').toString().trim(),
+            industry: formData.get('industry').toString().trim(),
+            terms: formData.get('terms').toString().trim()
+          };
+          d.customers.unshift(customer);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Customer master', renderTable(['Code', 'Customer', 'Industry', 'Terms'], tableData)));
+
+        const right = document.createElement('div');
+        right.appendChild(renderPanel('Add customer', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderOrders() {
+        const d = state.data;
+        const rows = d.salesOrders.map((row) => [row.number, d.customers.find((c) => c.id === row.customerId)?.name || '—', row.date, row.due, row.product, Number(row.quantityKg || 0), Number(row.pricePerKg || 0).toFixed(2), row.status]);
+
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              Order number
+              <input name="number" required placeholder="SO-DEMO-0101" />
+            </label>
+            <label class="field">
+              Customer
+              <select name="customerId" required>
+                ${d.customers.map((c) => `<option value="${c.id}">${c.name}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field full">
+              Product specification
+              <input name="product" required placeholder="Printed laminate film, 500 mm x 80 micron" />
+            </label>
+            <label class="field">
+              Quantity (kg)
+              <input name="quantityKg" type="number" min="1" required />
+            </label>
+            <label class="field">
+              Price / kg (RM)
+              <input name="pricePerKg" type="number" min="0" step="0.01" required />
+            </label>
+            <label class="field">
+              Due date
+              <input name="due" type="date" required />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Add sales order</button>
+        `;
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const order = {
+            id: id('SO'),
+            number: formData.get('number').toString().trim(),
+            customerId: formData.get('customerId').toString(),
+            date: new Date().toISOString().slice(0, 10),
+            due: formData.get('due').toString(),
+            product: formData.get('product').toString().trim(),
+            quantityKg: Number(formData.get('quantityKg') || 0),
+            pricePerKg: Number(formData.get('pricePerKg') || 0),
+            status: 'pending'
+          };
+          d.salesOrders.unshift(order);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Sales orders', renderTable(['Order', 'Customer', 'Date', 'Due', 'Product', 'Qty kg', 'RM/kg', 'Status'], rows)));
+
+        const right = document.createElement('div');
+        right.appendChild(renderPanel('Create sales order', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderPurchasing() {
+        const d = state.data;
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Purchase requisitions', renderTable(
+          ['PR', 'Supplier', 'Material', 'Qty', 'Date', 'Status'],
+          d.purchaseRequisitions.map((r) => [r.number, d.suppliers.find((s) => s.id === r.supplierId)?.name || '—', d.materials.find((m) => m.id === r.materialId)?.name || '—', r.quantity, r.date, r.status])
+        )));
+
+        const right = document.createElement('div');
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              PR number
+              <input name="number" required placeholder="PR-DEMO-0110" />
+            </label>
+            <label class="field">
+              Supplier
+              <select name="supplierId" required>
+                ${d.suppliers.map((s) => `<option value="${s.id}">${s.name}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field">
+              Material
+              <select name="materialId" required>
+                ${d.materials.map((m) => `<option value="${m.id}">${m.name}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field">
+              Quantity
+              <input name="quantity" type="number" min="1" required />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Create requisition</button>
+        `;
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          d.purchaseRequisitions.unshift({
+            number: formData.get('number').toString().trim(),
+            supplierId: formData.get('supplierId').toString(),
+            materialId: formData.get('materialId').toString(),
+            quantity: Number(formData.get('quantity') || 0),
+            date: new Date().toISOString().slice(0, 10),
+            status: 'pending_approval'
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+        right.appendChild(renderPanel('Create requisition', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderInventory() {
+        const d = state.data;
+
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Material lots', renderTable(
+          ['SKU', 'Material', 'Lot', 'On hand', 'Unit cost RM', 'Received'],
+          d.inventoryLots.map((lot) => {
+            const material = d.materials.find((m) => m.id === lot.materialId);
+            return [material ? material.sku : '—', material ? material.name : '—', lot.lot, Number(lot.onHand || 0), Number(lot.unitCost || 0).toFixed(2), lot.received];
+          })
+        )));
+
+        const right = document.createElement('div');
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              Material
+              <select name="materialId" required>
+                ${d.materials.map((m) => `<option value="${m.id}">${m.name}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field">
+              Lot number
+              <input name="lot" required placeholder="LDPE-LOT-2001" />
+            </label>
+            <label class="field">
+              Quantity on hand
+              <input name="onHand" type="number" min="0" required />
+            </label>
+            <label class="field">
+              Unit cost (RM)
+              <input name="unitCost" type="number" min="0" step="0.01" required />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Add lot</button>
+        `;
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          d.inventoryLots.unshift({
+            materialId: formData.get('materialId').toString(),
+            lot: formData.get('lot').toString().trim(),
+            onHand: Number(formData.get('onHand') || 0),
+            unitCost: Number(formData.get('unitCost') || 0),
+            received: new Date().toISOString().slice(0, 10)
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+        right.appendChild(renderPanel('Add inventory lot', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderProduction() {
+        const d = state.data;
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Production work orders', renderTable(
+          ['WO', 'Sales order', 'Machine', 'Target kg', 'Produced kg', 'Scrap kg', 'Status'],
+          d.workOrders.map((wo) => [wo.number, d.salesOrders.find((so) => so.id === wo.salesOrderId)?.number || '—', wo.machine || '—', Number(wo.targetKg || 0), Number(wo.producedKg || 0), Number(wo.scrapKg || 0), wo.status || 'planned'])
+        )));
+
+        const right = document.createElement('div');
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              Work order number
+              <input name="number" required placeholder="WO-DEMO-0110" />
+            </label>
+            <label class="field">
+              Sales order
+              <select name="salesOrderId" required>
+                ${d.salesOrders.map((so) => `<option value="${so.id}">${so.number}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field">
+              Machine
+              <input name="machine" required placeholder="Extruder Line 3" />
+            </label>
+            <label class="field">
+              Target kg
+              <input name="targetKg" type="number" min="1" required />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Create work order</button>
+        `;
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          d.workOrders.unshift({
+            id: id('WO'),
+            number: formData.get('number').toString().trim(),
+            salesOrderId: formData.get('salesOrderId').toString(),
+            machine: formData.get('machine').toString().trim(),
+            targetKg: Number(formData.get('targetKg') || 0),
+            producedKg: 0,
+            scrapKg: 0,
+            status: 'planned'
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+        right.appendChild(renderPanel('Create work order', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderQuality() {
+        const d = state.data;
+        const rows = d.qualityRolls.map((row) => [row.barcode, d.workOrders.find((wo) => wo.id === row.workOrderId)?.number || '—', Number(row.weightKg || 0), Number(row.thicknessMicron || 0), row.result, row.inspector]);
+
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="form-grid">
+            <label class="field">
+              Barcode
+              <input name="barcode" required placeholder="ROLL-1001" />
+            </label>
+            <label class="field">
+              Work order
+              <select name="workOrderId" required>
+                ${d.workOrders.map((wo) => `<option value="${wo.id}">${wo.number}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field">
+              Weight (kg)
+              <input name="weightKg" type="number" min="0" step="0.1" required />
+            </label>
+            <label class="field">
+              Thickness (micron)
+              <input name="thicknessMicron" type="number" min="0" step="0.1" required />
+            </label>
+            <label class="field">
+              Result
+              <select name="result">
+                <option value="pass">Pass</option>
+                <option value="hold">Hold</option>
+                <option value="fail">Fail</option>
+              </select>
+            </label>
+            <label class="field">
+              Inspector
+              <input name="inspector" required placeholder="QA Supervisor" />
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit">Add roll record</button>
+        `;
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          d.qualityRolls.unshift({
+            barcode: formData.get('barcode').toString().trim(),
+            workOrderId: formData.get('workOrderId').toString(),
+            weightKg: Number(formData.get('weightKg') || 0),
+            thicknessMicron: Number(formData.get('thicknessMicron') || 0),
+            result: formData.get('result').toString(),
+            inspector: formData.get('inspector').toString().trim()
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+          form.reset();
+          render();
+        });
+
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Quality roll traceability', renderTable(['Barcode', 'Work order', 'Weight kg', 'Thickness µm', 'Result', 'Inspector'], rows)));
+
+        const right = document.createElement('div');
+        right.appendChild(renderPanel('Create roll record', form));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function renderDispatch() {
+        const d = state.data;
+        const rows = d.deliveries.map((row) => [row.number, d.customers.find((c) => c.id === row.customerId)?.name || '—', d.salesOrders.find((so) => so.id === row.salesOrderId)?.number || '—', row.date, Number(row.quantityKg || 0), row.destination || '—', row.status]);
+        const panelBody = renderTable(['Delivery', 'Customer', 'Sales order', 'Date', 'Qty kg', 'Destination', 'Status'], rows);
+        content.appendChild(renderPanel('Dispatches', panelBody));
+      }
+
+      function renderFinance() {
+        const d = state.data;
+        const rows = d.financialEntries.map((row) => [row.type, row.reference, row.account, money(row.amount), row.date]);
+        const left = document.createElement('div');
+        left.appendChild(renderPanel('Finance entries', renderTable(['Type', 'Reference', 'Account', 'Amount', 'Date'], rows)));
+
+        const right = document.createElement('div');
+        const report = document.createElement('div');
+        report.className = 'report-box';
+        report.innerHTML = `
+          <div><strong>Demo management report</strong></div>
+          <div class="muted">Period: ${d.managementReports.period}</div>
+          <div>Production target: <strong>${d.managementReports.productionTargetKg} kg</strong></div>
+          <div>Actual: <strong>${d.managementReports.productionActualKg} kg</strong></div>
+          <div>Scrap: <strong>${d.managementReports.scrapKg} kg</strong></div>
+          <div>On-time delivery: <strong>${d.managementReports.onTimeDeliveryPercent}%</strong></div>
+          <div>Open order value: <strong>${money(d.managementReports.openOrderValueMYR)}</strong></div>
+          <div>Inventory estimate: <strong>${money(d.managementReports.materialInventoryValueMYR)}</strong></div>
+          <div class="muted">${d.managementReports.notes}</div>
+        `;
+        right.appendChild(renderPanel('Management summary', report));
+
+        const grid = document.createElement('div');
+        grid.className = 'content-grid';
+        grid.appendChild(left);
+        grid.appendChild(right);
+        content.appendChild(grid);
+      }
+
+      function render() {
+        if (!state.loggedIn) return;
+        renderHeader();
+        content.innerHTML = '';
+        const renderers = {
+          overview: renderOverview,
+          customers: renderCustomers,
+          orders: renderOrders,
+          purchasing: renderPurchasing,
+          inventory: renderInventory,
+          production: renderProduction,
+          quality: renderQuality,
+          dispatch: renderDispatch,
+          finance: renderFinance
+        };
+        (renderers[state.active] || renderOverview)();
+      }
+
+      loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (email === DEMO_USER.email && password === DEMO_USER.password) {
+          state.loggedIn = true;
+          state.user = { email: DEMO_USER.email, name: DEMO_USER.name };
+          authView.classList.add('hidden');
+          appView.classList.remove('hidden');
+          render();
+          setNotice('');
+        } else {
+          setNotice('Invalid demo credentials. Use admin@respack.demo / respack123', true);
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        state.loggedIn = false;
+        state.user = null;
+        authView.classList.remove('hidden');
+        appView.classList.add('hidden');
+        loginForm.reset();
+        document.getElementById('email').value = DEMO_USER.email;
+        document.getElementById('password').value = DEMO_USER.password;
+        setNotice('');
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadDemoData();
+        buildNav();
+        renderHeader();
+      });
+    })();
+  </script>
+</body>
+</html>

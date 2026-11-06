@@ -1,0 +1,109 @@
+{
+  "notice": "DEMO ONLY. Every company, person, identifier, document, date, quantity, price, and operational record in this file is fictional and generated for interface preview. It is not sourced from Respack or the internet and must never be treated as real operational or accounting data.",
+  "currency": "MYR",
+  "units": {"weight": "kg", "thickness": "micron"},
+  "customers": [
+    {"id":"CUS-001","code":"C-1001","name":"Meridian Pantry Foods (Demo)","industry":"Food packaging","terms":"30 days"},
+    {"id":"CUS-002","code":"C-1002","name":"Northstar Home Care (Demo)","industry":"Home care","terms":"45 days"},
+    {"id":"CUS-003","code":"C-1003","name":"Greenfield Produce Co. (Demo)","industry":"Fresh produce","terms":"30 days"}
+  ],
+  "suppliers": [
+    {"id":"SUP-001","code":"S-2001","name":"Polymer Supply Demo Sdn. Bhd.","category":"Resin","leadDays":7},
+    {"id":"SUP-002","code":"S-2002","name":"Flexo Ink & Additives Demo Sdn. Bhd.","category":"Ink and additives","leadDays":5},
+    {"id":"SUP-003","code":"S-2003","name":"Core & Carton Demo Trading","category":"Packaging consumables","leadDays":3}
+  ],
+  "materials": [
+    {"id":"MAT-001","sku":"RES-LDPE-01","name":"LDPE resin, film grade","unit":"kg","reorderLevel":2000},
+    {"id":"MAT-002","sku":"RES-LLDPE-01","name":"LLDPE resin, film grade","unit":"kg","reorderLevel":1500},
+    {"id":"MAT-003","sku":"MB-WHT-01","name":"White masterbatch","unit":"kg","reorderLevel":250},
+    {"id":"MAT-004","sku":"INK-FLEXO-CMYK","name":"Flexographic ink set","unit":"kg","reorderLevel":100},
+    {"id":"MAT-005","sku":"CORE-76MM","name":"Paper core, 76 mm","unit":"pcs","reorderLevel":500}
+  ],
+  "salesOrders": [
+    {"id":"SO-26041","number":"SO-DEMO-26041","customerId":"CUS-001","date":"2026-10-28","due":"2026-11-18","product":"Printed LDPE pouch film, 450 mm × 60 µm","quantityKg":3200,"pricePerKg":8.4,"status":"in_production"},
+    {"id":"SO-26042","number":"SO-DEMO-26042","customerId":"CUS-002","date":"2026-11-01","due":"2026-11-22","product":"Co-extruded stretch film, 500 mm × 23 µm","quantityKg":1800,"pricePerKg":9.1,"status":"confirmed"},
+    {"id":"SO-26043","number":"SO-DEMO-26043","customerId":"CUS-003","date":"2026-11-03","due":"2026-11-14","product":"Produce liner film, 350 mm × 30 µm","quantityKg":900,"pricePerKg":7.6,"status":"pending"}
+  ],
+  "purchaseRequisitions": [
+    {"number":"PR-DEMO-3107","supplierId":"SUP-001","materialId":"MAT-001","quantity":4000,"date":"2026-11-04","status":"approved"},
+    {"number":"PR-DEMO-3108","supplierId":"SUP-003","materialId":"MAT-005","quantity":1200,"date":"2026-11-05","status":"ordered"},
+    {"number":"PR-DEMO-3109","supplierId":"SUP-002","materialId":"MAT-004","quantity":200,"date":"2026-11-06","status":"pending_approval"}
+  ],
+  "purchaseApprovals": [
+    {"document":"PR-DEMO-3107","step":"Department manager","approver":"Demo Manager A","decision":"approved","date":"2026-11-04","comment":"Fictional demo approval"},
+    {"document":"PR-DEMO-3108","step":"Finance review","approver":"Demo Finance B","decision":"approved","date":"2026-11-05","comment":"Within demo budget"},
+    {"document":"PR-DEMO-3109","step":"Department manager","approver":"Demo Manager A","decision":"pending","date":"2026-11-06","comment":"Awaiting fictional review"}
+  ],
+  "goodsReceipts": [
+    {"number":"GRN-DEMO-1802","supplierId":"SUP-001","materialId":"MAT-002","lot":"LLDPE-DEMO-26-114","quantity":2500,"unitCost":5.35,"date":"2026-11-02"},
+    {"number":"GRN-DEMO-1803","supplierId":"SUP-003","materialId":"MAT-005","lot":"CORE-DEMO-26-087","quantity":800,"unitCost":1.25,"date":"2026-11-04"}
+  ],
+  "supplierInvoices": [
+    {"invoice":"INV-DEMO-8821","supplierId":"SUP-001","receipt":"GRN-DEMO-1802","invoiceAmount":13375,"receiptAmount":13375,"variance":0,"matchStatus":"matched","dueDate":"2026-12-02"},
+    {"invoice":"INV-DEMO-8822","supplierId":"SUP-003","receipt":"GRN-DEMO-1803","invoiceAmount":1040,"receiptAmount":1000,"variance":40,"matchStatus":"review","dueDate":"2026-12-04"}
+  ],
+  "inventoryLots": [
+    {"materialId":"MAT-001","lot":"LDPE-DEMO-26-110","onHand":3250,"unitCost":5.2,"received":"2026-10-29"},
+    {"materialId":"MAT-002","lot":"LLDPE-DEMO-26-114","onHand":2180,"unitCost":5.35,"received":"2026-11-02"},
+    {"materialId":"MAT-003","lot":"MB-WHT-DEMO-26-019","onHand":310,"unitCost":8.1,"received":"2026-10-26"},
+    {"materialId":"MAT-004","lot":"INK-DEMO-26-043","onHand":86,"unitCost":22.4,"received":"2026-10-31"},
+    {"materialId":"MAT-005","lot":"CORE-DEMO-26-087","onHand":800,"unitCost":1.25,"received":"2026-11-04"}
+  ],
+  "materialIssues": [
+    {"issue":"ISS-DEMO-4401","workOrderId":"WO-5401","materialId":"MAT-001","lot":"LDPE-DEMO-26-110","quantity":950,"date":"2026-11-05","issuedBy":"Demo Storekeeper A"},
+    {"issue":"ISS-DEMO-4402","workOrderId":"WO-5401","materialId":"MAT-004","lot":"INK-DEMO-26-043","quantity":18,"date":"2026-11-05","issuedBy":"Demo Storekeeper A"},
+    {"issue":"ISS-DEMO-4403","workOrderId":"WO-5403","materialId":"MAT-002","lot":"LLDPE-DEMO-26-114","quantity":420,"date":"2026-11-06","issuedBy":"Demo Storekeeper B"}
+  ],
+  "bomItems": [
+    {"product":"Produce liner film, 350 mm × 30 µm","materialId":"MAT-001","quantityPer1000Kg":650,"scrapPct":2.5},
+    {"product":"Produce liner film, 350 mm × 30 µm","materialId":"MAT-002","quantityPer1000Kg":340,"scrapPct":2.5},
+    {"product":"Produce liner film, 350 mm × 30 µm","materialId":"MAT-003","quantityPer1000Kg":10,"scrapPct":2.5},
+    {"product":"Printed LDPE pouch film, 450 mm × 60 µm","materialId":"MAT-001","quantityPer1000Kg":780,"scrapPct":3.0},
+    {"product":"Printed LDPE pouch film, 450 mm × 60 µm","materialId":"MAT-004","quantityPer1000Kg":12,"scrapPct":3.0}
+  ],
+  "workOrders": [
+    {"id":"WO-5401","number":"WO-DEMO-5401","salesOrderId":"SO-26041","machine":"Blown Film Line 1","targetKg":1600,"producedKg":1180,"scrapKg":31,"status":"in_progress"},
+    {"id":"WO-5402","number":"WO-DEMO-5402","salesOrderId":"SO-26042","machine":"Cast Film Line 2","targetKg":1800,"producedKg":0,"scrapKg":0,"status":"planned"},
+    {"id":"WO-5403","number":"WO-DEMO-5403","salesOrderId":"SO-26041","machine":"Slitter/Rewinder 1","targetKg":1600,"producedKg":420,"scrapKg":12,"status":"in_progress"}
+  ],
+  "productionRoutes": [
+    {"workOrderId":"WO-5401","sequence":10,"station":"Blown film extrusion","targetMinutes":480,"status":"completed"},
+    {"workOrderId":"WO-5401","sequence":20,"station":"Flexographic printing","targetMinutes":300,"status":"in_progress"},
+    {"workOrderId":"WO-5401","sequence":30,"station":"Slitting and rewinding","targetMinutes":240,"status":"planned"}
+  ],
+  "laborEntries": [
+    {"employee":"Demo Operator A","workOrderId":"WO-5401","station":"Blown Film Line 1","shift":"Day","hours":7.5,"date":"2026-11-05","activity":"Production run"},
+    {"employee":"Demo Operator B","workOrderId":"WO-5401","station":"Flexographic printing","shift":"Day","hours":6,"date":"2026-11-05","activity":"Setup and run support"},
+    {"employee":"Demo Technician C","workOrderId":"WO-5403","station":"Slitter/Rewinder 1","shift":"Night","hours":8,"date":"2026-11-05","activity":"Slitting operation"}
+  ],
+  "maintenanceEvents": [
+    {"ticket":"MT-DEMO-0701","machine":"Blown Film Line 1","type":"Preventive maintenance","opened":"2026-11-03","downtimeHours":1.5,"status":"completed","note":"Fictional inspection and filter check"},
+    {"ticket":"MT-DEMO-0702","machine":"Cast Film Line 2","type":"Unplanned stop","opened":"2026-11-05","downtimeHours":2.25,"status":"in_progress","note":"Demo temperature sensor investigation"},
+    {"ticket":"MT-DEMO-0703","machine":"Slitter/Rewinder 1","type":"Changeover service","opened":"2026-11-06","downtimeHours":0.75,"status":"planned","note":"Fictional scheduled blade inspection"}
+  ],
+  "qualityRolls": [
+    {"barcode":"DEMO-ROLL-90001","workOrderId":"WO-5401","weightKg":42.6,"thicknessMicron":60.4,"result":"pass","inspector":"Demo QA A"},
+    {"barcode":"DEMO-ROLL-90002","workOrderId":"WO-5401","weightKg":39.8,"thicknessMicron":59.2,"result":"pass","inspector":"Demo QA A"},
+    {"barcode":"DEMO-ROLL-90003","workOrderId":"WO-5401","weightKg":44.1,"thicknessMicron":63.1,"result":"hold","inspector":"Demo QA B"},
+    {"barcode":"DEMO-ROLL-90004","workOrderId":"WO-5403","weightKg":36.3,"thicknessMicron":60.1,"result":"pass","inspector":"Demo QA B"}
+  ],
+  "deliveries": [
+    {"number":"DN-DEMO-7201","customerId":"CUS-003","salesOrderId":"SO-26043","date":"2026-11-06","quantityKg":450,"destination":"Demo customer receiving bay","status":"dispatched"},
+    {"number":"DN-DEMO-7202","customerId":"CUS-001","salesOrderId":"SO-26041","date":"2026-11-10","quantityKg":600,"destination":"Demo regional warehouse","status":"planned"}
+  ],
+  "financialEntries": [
+    {"type":"revenue","reference":"SO-DEMO-26041 deposit","account":"4000-SALES","amount":10000,"date":"2026-11-01"},
+    {"type":"cost","reference":"GRN-DEMO-1802 resin receipt","account":"5000-RAW-MATERIAL","amount":13375,"date":"2026-11-02"},
+    {"type":"expense","reference":"Demo energy allocation - October","account":"6100-UTILITIES","amount":4280.5,"date":"2026-11-03"}
+  ],
+  "managementReports": {
+    "period":"Fictional demo period ending 2026-11-06",
+    "productionTargetKg":5000,
+    "productionActualKg":1600,
+    "scrapKg":43,
+    "onTimeDeliveryPercent":92,
+    "openOrderValueMYR":34500,
+    "materialInventoryValueMYR":34502,
+    "notes":"Illustrative roll-up only; not reconciled, audited, or suitable for decisions."
+  }
+}
