@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respack ERP - Flexible Packaging</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  .sidebar-active { background: #2563eb; color: white; }
+</style>
+</head>
+<body class="bg-gray-100 flex">
+<!-- Sidebar -->
+<div class="w-64 bg-black text-white min-h-screen p-4 fixed">
+  <h1 class="text-xl font-bold mb-1"><i class="fa-solid fa-recycle mr-2 text-blue-400"></i>Respack ERP</h1>
+  <p class="text-xs text-gray-400 mb-6">Sungai Petani - Flexible Packaging</p>
+  <nav class="space-y-1">
+    <button onclick="showPage('dashboard')" id="nav-dashboard" class="sidebar-active w-full text-left p-3 rounded"><i class="fa-solid fa-chart-line mr-2"></i> Dashboard</button>
+    <button onclick="showPage('quotation')" id="nav-quotation" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-calculator mr-2"></i> Quotation Calculator</button>
+    <button onclick="showPage('sales')" id="nav-sales" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-cart-shopping mr-2"></i> Sales Orders</button>
+    <button onclick="showPage('production')" id="nav-production" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-industry mr-2"></i> Production Floor</button>
+    <button onclick="showPage('inventory')" id="nav-inventory" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-boxes-stacked mr-2"></i> Inventory - Resin</button>
+    <button onclick="showPage('qc')" id="nav-qc" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-flask mr-2"></i> QC & Rolls</button>
+  </nav>
+  <div class="absolute bottom-4 text-xs text-gray-500">ISO 9001 Ready | v1.0</div>
+</div>
+
+<!-- Main Content -->
+<div class="ml-64 flex-1 p-8">
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page">
+    <h2 class="text-3xl font-bold">Production Dashboard</h2>
+    <div class="grid grid-cols-4 gap-4 mt-6">
+      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Today Production</p><h3 class="text-3xl font-bold" id="kpi-kg">0 KG</h3><p class="text-green-500 text-sm">+12% vs yesterday</p></div>
+      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Scrap %</p><h3 class="text-3xl font-bold text-red-500" id="kpi-scrap">2.1%</h3><p class="text-xs">Target < 3%</p></div>
+      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">OEE</p><h3 class="text-3xl font-bold">84.2%</h3><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:84%"></div></div></div>
+      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Pending SO</p><h3 class="text-3xl font-bold" id="kpi-so">0</h3><p class="text-xs">Need scheduling</p></div>
+    </div>
+    <div class="bg-white mt-6 p-6 rounded-xl shadow">
+      <h3 class="font-bold mb-4">Machine Status - Extrusion Lines</h3>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="border p-4 rounded"><p class="font-bold">Line 1 - Blown Film</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 120kg/hr</span><p class="text-sm mt-2">Job: WO-1023 - 50mic PE Bag</p></div>
+        <div class="border p-4 rounded"><p class="font-bold">Line 2 - Cast Stretch</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 180kg/hr</span><p class="text-sm mt-2">Job: WO-1024 - 23mic Stretch Film</p></div>
+        <div class="border p-4 rounded"><p class="font-bold">Line 3 - Slitter</p><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">SETUP</span><p class="text-sm mt-2">Next: WO-1025</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTATION -->
+  <div id="page-quotation" class="page hidden">
+    <h2 class="text-3xl font-bold">Quotation Calculator - Respack Formula</h2>
+    <div class="grid grid-cols-2 gap-8 mt-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <div class="grid grid-cols-2 gap-4">
+          <label>Width (mm)<input id="q-width" type="number" value="1000" class="w-full border p-2 rounded mt-1"></label>
+          <label>Length (mm)<input id="q-length" type="number" value="1500" class="w-full border p-2 rounded mt-1"></label>
+          <label>Micron (µ)<input id="q-micron" type="number" value="50" class="w-full border p-2 rounded mt-1"></label>
+          <label>Qty (pcs)<input id="q-qty" type="number" value="5000" class="w-full border p-2 rounded mt-1"></label>
+          <label>Resin Price RM/kg<input id="q-resin" type="number" value="5.2" step="0.1" class="w-full border p-2 rounded mt-1"></label>
+          <label>Margin %<input id="q-margin" type="number" value="25" class="w-full border p-2 rounded mt-1"></label>
+        </div>
+        <button onclick="calcQuote()" class="mt-6 bg-blue-600 text-white w-full p-3 rounded font-bold">Calculate & Create SO</button>
+      </div>
+      <div class="bg-black text-white p-6 rounded-xl">
+        <h3 class="font-bold text-xl mb-4">Cost Breakdown</h3>
+        <div class="space-y-3 text-lg">
+          <p class="flex justify-between"><span>Weight / pc:</span><b id="r-weight">0 g</b></p>
+          <p class="flex justify-between"><span>Total KG:</span><b id="r-totalkg" class="text-yellow-400">0 KG</b></p>
+          <p class="flex justify-between"><span>Material Cost:</span><b id="r-cost">RM 0</b></p>
+          <hr class="border-gray-700">
+          <p class="flex justify-between text-2xl"><span>Sell Price:</span><b id="r-sell" class="text-green-400">RM 0</b></p>
+          <p class="flex justify-between"><span>Per pc:</span><b id="r-perpc">RM 0</b></p>
+        </div>
+        <button onclick="createSOFromQuote()" class="mt-6 bg-white text-black w-full p-2 rounded font-bold">+ Add to Sales Orders</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALES -->
+  <div id="page-sales" class="page hidden">
+    <div class="flex justify-between"><h2 class="text-3xl font-bold">Sales Orders</h2><button onclick="addDummySO()" class="bg-blue-600 text-white px-4 py-2 rounded">+ New SO</button></div>
+    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
+      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">SO No</th><th class="p-3">Customer</th><th class="p-3">Spec</th><th class="p-3">KG</th><th class="p-3">Amount</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="sales-body"></tbody></table>
+    </div>
+  </div>
+
+  <!-- PRODUCTION -->
+  <div id="page-production" class="page hidden">
+    <h2 class="text-3xl font-bold">Work Orders - Production Floor</h2>
+    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
+      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">WO No</th><th class="p-3">SO No</th><th class="p-3">Machine</th><th class="p-3">Target</th><th class="p-3">Produced</th><th class="p-3">Scrap</th><th class="p-3">Action</th></tr></thead><tbody id="prod-body"></tbody></table>
+    </div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div id="page-inventory" class="page hidden">
+    <h2 class="text-3xl font-bold">Raw Material Inventory - Resin & Masterbatch</h2>
+    <div class="grid grid-cols-3 gap-4 mt-6" id="inv-cards"></div>
+  </div>
+
+  <!-- QC -->
+  <div id="page-qc" class="page hidden">
+    <h2 class="text-3xl font-bold">QC - Roll Tracking & Barcode</h2>
+    <div class="bg-white mt-6 p-6 rounded-xl shadow">
+      <div class="flex gap-4"><input id="qc-barcode" placeholder="Scan barcode e.g. ROLL-2024-001" class="border p-3 rounded flex-1"><button onclick="addRoll()" class="bg-black text-white px-6 rounded">Add Roll</button></div>
+      <table class="w-full mt-6 text-left"><thead class="bg-gray-100"><tr><th class="p-3">Barcode</th><th class="p-3">WO No</th><th class="p-3">Weight</th><th class="p-3">Micron Actual</th><th class="p-3">QC</th></tr></thead><tbody id="qc-body"></tbody></table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- Data Storage ---
+let salesOrders = JSON.parse(localStorage.getItem('respack_so') || '[]');
+let workOrders = JSON.parse(localStorage.getItem('respack_wo') || '[]');
+let rolls = JSON.parse(localStorage.getItem('respack_rolls') || '[]');
+let inventory = [
+  {name:'LDPE', lot:'LDPE-24-001', qty: 5250, cost: 5.1, supplier:'Petronas'},
+  {name:'LLDPE', lot:'LLDPE-24-002', qty: 3100, cost: 5.3, supplier:'Lotus'},
+  {name:'HDPE', lot:'HDPE-24-003', qty: 1800, cost: 5.0, supplier:'Petronas'},
+  {name:'MB White', lot:'MB-W-001', qty: 450, cost: 8.2, supplier:'Tosaf'},
+  {name:'MB Black', lot:'MB-B-001', qty: 200, cost: 8.5, supplier:'Tosaf'},
+  {name:'Papercore 3 inch', lot:'PC-001', qty: 1200, cost: 1.2, supplier:'Local'},
+];
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+  document.getElementById('page-'+id).classList.remove('hidden');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sidebar-active'));
+  document.getElementById('nav-'+id).classList.add('sidebar-active');
+  renderAll();
+}
+
+function calcQuote(){
+  const w=+document.getElementById('q-width').value;
+  const l=+document.getElementById('q-length').value;
+  const m=+document.getElementById('q-micron').value;
+  const qty=+document.getElementById('q-qty').value;
+  const resin=+document.getElementById('q-resin').value;
+  const margin=+document.getElementById('q-margin').value;
+  const density=0.92;
+  const weightPerPc = (w*l*m*density*2)/10000000000;
+  const totalKg = weightPerPc*qty;
+  const cost = totalKg*resin;
+  const sell = cost*(1+margin/100);
+  document.getElementById('r-weight').innerText = (weightPerPc*1000).toFixed(1)+' g';
+  document.getElementById('r-totalkg').innerText = totalKg.toFixed(2)+' KG';
+  document.getElementById('r-cost').innerText = 'RM '+cost.toFixed(2);
+  document.getElementById('r-sell').innerText = 'RM '+sell.toFixed(2);
+  document.getElementById('r-perpc').innerText = 'RM '+(sell/qty).toFixed(4);
+  return {w,l,m,qty,totalKg,sell};
+}
+
+function createSOFromQuote(){
+  const q=calcQuote();
+  const soNo='SO-'+(1000+salesOrders.length+1);
+  salesOrders.unshift({soNo, customer:'New Customer - Food Packaging', spec: `${q.w}x${q.l}x${q.m}µ`, kg:q.totalKg.toFixed(2), amount:q.sell.toFixed(2), status:'PENDING'});
+  const woNo='WO-'+(1000+workOrders.length+1);
+  workOrders.unshift({woNo, soNo, machine:'Extruder Line 1', target:q.totalKg.toFixed(2), produced:'0', scrap:'0'});
+  save(); showPage('sales'); alert('Sales Order '+soNo+' & Work Order '+woNo+' created!');
+}
+
+function addDummySO(){
+  salesOrders.unshift({soNo:'SO-'+(1000+salesOrders.length+1), customer:'Lotus Foods Sdn Bhd', spec:'800x1200x40µ', kg:(Math.random()*1000+200).toFixed(2), amount:(Math.random()*5000+1000).toFixed(2), status:'PENDING'});
+  save(); renderAll();
+}
+
+function save(){
+  localStorage.setItem('respack_so', JSON.stringify(salesOrders));
+  localStorage.setItem('respack_wo', JSON.stringify(workOrders));
+  localStorage.setItem('respack_rolls', JSON.stringify(rolls));
+}
+
+function renderAll(){
+  document.getElementById('sales-body').innerHTML = salesOrders.map(s=>`<tr class="border-b"><td class="p-3 font-bold">${s.soNo}</td><td class="p-3">${s.customer}</td><td class="p-3">${s.spec}</td><td class="p-3">${s.kg} KG</td><td class="p-3">RM ${s.amount}</td><td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${s.status}</span></td><td class="p-3"><button onclick="convertToProd('${s.soNo}')" class="text-blue-600">→ Production</button></td></tr>`).join('') || '<tr><td colspan=7 class="p-6 text-center text-gray-400">No orders yet. Use Quotation Calculator.</td></tr>';
+  document.getElementById('prod-body').innerHTML = workOrders.map(w=>`<tr class="border-b"><td class="p-3 font-bold">${w.woNo}</td><td class="p-3">${w.soNo}</td><td class="p-3">${w.machine}</td><td class="p-3">${w.target} KG</td><td class="p-3"><input type="number" value="${w.produced}" onchange="updateProd('${w.woNo}', 'produced', this.value)" class="w-20 border p-1"></td><td class="p-3"><input type="number" value="${w.scrap}" onchange="updateProd('${w.woNo}', 'scrap', this.value)" class="w-20 border p-1"></td><td class="p-3"><button onclick="completeWO('${w.woNo}')" class="bg-green-600 text-white px-3 py-1 rounded text-xs">Complete</button></td></tr>`).join('');
+  document.getElementById('inv-cards').innerHTML = inventory.map(i=>`<div class="bg-white p-4 rounded-xl shadow"><p class="font-bold">${i.name}</p><p class="text-xs text-gray-500">${i.lot} | ${i.supplier}</p><p class="text-2xl font-bold mt-2">${i.qty} KG</p><p class="text-sm">RM ${i.cost}/kg | Value RM ${(i.qty*i.cost).toFixed(2)}</p><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:${Math.min(i.qty/50,100)}%"></div></div></div>`).join('');
+  document.getElementById('qc-body').innerHTML = rolls.map(r=>`<tr class="border-b"><td class="p-3 font-mono">${r.barcode}</td><td class="p-3">${r.woNo}</td><td class="p-3">${r.weight} KG</td><td class="p-3">${r.micron} µ</td><td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">${r.qc}</span></td></tr>`).join('') || '<tr><td colspan=5 class="p-6 text-center text-gray-400">No rolls scanned</td></tr>';
+  document.getElementById('kpi-kg').innerText = workOrders.reduce((a,b)=>a+parseFloat(b.produced||0),0).toFixed(0)+' KG';
+  document.getElementById('kpi-so').innerText = salesOrders.length;
+}
+
+function convertToProd(soNo){ showPage('production'); }
+function updateProd(woNo, field, val){ const w=workOrders.find(x=>x.woNo==woNo); w[field]=val; save(); }
+function completeWO(woNo){ alert(woNo+' marked complete, ready for QC'); }
+function addRoll(){
+  const code=document.getElementById('qc-barcode').value || 'ROLL-'+Date.now();
+  const woNo=workOrders[0]?.woNo || 'WO-1001';
+  rolls.unshift({barcode:code, woNo, weight:(Math.random()*50+20).toFixed(1), micron:(48+Math.random()*4).toFixed(1), qc:'PASS'});
+  save(); renderAll(); document.getElementById('qc-barcode').value='';
+}
+calcQuote(); renderAll();
+</script>
+</body>
+</html>
