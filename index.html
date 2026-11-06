@@ -1,197 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Respack ERP - Flexible Packaging</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-  .sidebar-active { background: #2563eb; color: white; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10251f">
+  <title>Respack | Manufacturing ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{font-family:'DM Sans',sans-serif;color:#17231e;background:#f4f6f3;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{min-height:100vh}.topbar{height:68px;background:#10251f;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px}.brand{font:800 19px Manrope,sans-serif;letter-spacing:-.6px}.brand span{color:#8ed3a8}.userbar{display:flex;align-items:center;gap:14px;font-size:13px;color:#d7e4dc}.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 68px)}aside{background:#fff;border-right:1px solid #e6ebe7;padding:22px 14px}.nav-label{font-size:10px;font-weight:700;color:#86938b;letter-spacing:1.2px;padding:4px 12px 12px}.nav{width:100%;border:0;background:transparent;color:#536159;padding:11px 12px;border-radius:8px;text-align:left;margin:2px 0;font-weight:600}.nav.active,.nav:hover{background:#eaf4ed;color:#17633b}.main{padding:30px;max-width:1450px;width:100%;margin:auto}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}.page-head h1{font:800 26px Manrope,sans-serif;letter-spacing:-.7px;margin:0 0 5px}.muted{color:#758179;font-size:13px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.card,.panel{background:#fff;border:1px solid #e6ebe7;border-radius:12px;padding:18px}.kpi-label{font-size:12px;color:#758179}.kpi-value{font:800 25px Manrope,sans-serif;margin:8px 0 3px}.panel{margin-bottom:16px}.panel h2{font:700 16px Manrope,sans-serif;margin:0 0 15px}.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th{text-align:left;color:#758179;font-size:11px;text-transform:uppercase;letter-spacing:.5px;background:#f8faf8}th,td{padding:11px 12px;border-bottom:1px solid #edf0ed;font-size:13px}td{color:#344139}.empty{padding:24px;text-align:center;color:#758179}.btn{border:0;border-radius:7px;padding:9px 13px;background:#17633b;color:#fff;font-weight:700;font-size:12px}.btn:hover{background:#124d2e}.btn.secondary{background:#eaf0eb;color:#344139}.btn.danger{background:#a33838}.btn:disabled{opacity:.55;cursor:not-allowed}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:#526058}.field.full{grid-column:1/-1}.field input,.field select,.field textarea{border:1px solid #dce3dd;border-radius:7px;padding:9px;background:#fff;min-width:0;color:#17231e}.field textarea{min-height:72px;resize:vertical}.actions{display:flex;gap:8px;align-items:center;margin-top:14px}.notice{padding:12px 14px;border-radius:8px;background:#eef5ef;color:#335740;font-size:13px;margin:12px 0}.notice.error{background:#fbefed;color:#903c32}.auth{max-width:420px;margin:8vh auto;background:white;border:1px solid #e6ebe7;border-radius:14px;padding:28px}.auth h1{font:800 23px Manrope;margin-top:0}.hidden{display:none!important}.status{display:inline-block;background:#eef3ef;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:700;text-transform:capitalize}.status.complete,.status.pass{background:#e4f4e8;color:#24683b}.status.in_progress,.status.pending{background:#fff2d6;color:#805d11}.status.hold,.status.fail{background:#fae8e7;color:#9b3931}.footnote{font-size:11px;color:#87928b;margin-top:18px}.mobile-menu{display:none}
+    @media(max-width:850px){.layout{grid-template-columns:1fr}aside{display:flex;overflow:auto;padding:8px;border-right:0;border-bottom:1px solid #e6ebe7;gap:4px}.nav-label{display:none}.nav{width:auto;white-space:nowrap;margin:0}.main{padding:18px}.grid{grid-template-columns:repeat(2,1fr)}.topbar{padding:0 16px}}
+    @media(max-width:520px){.grid{grid-template-columns:1fr 1fr;gap:8px}.card{padding:12px}.kpi-value{font-size:20px}.page-head h1{font-size:22px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.userbar #user-email{display:none}}
+  </style>
 </head>
-<body class="bg-gray-100 flex">
-<!-- Sidebar -->
-<div class="w-64 bg-black text-white min-h-screen p-4 fixed">
-  <h1 class="text-xl font-bold mb-1"><i class="fa-solid fa-recycle mr-2 text-blue-400"></i>Respack ERP</h1>
-  <p class="text-xs text-gray-400 mb-6">Sungai Petani - Flexible Packaging</p>
-  <nav class="space-y-1">
-    <button onclick="showPage('dashboard')" id="nav-dashboard" class="sidebar-active w-full text-left p-3 rounded"><i class="fa-solid fa-chart-line mr-2"></i> Dashboard</button>
-    <button onclick="showPage('quotation')" id="nav-quotation" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-calculator mr-2"></i> Quotation Calculator</button>
-    <button onclick="showPage('sales')" id="nav-sales" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-cart-shopping mr-2"></i> Sales Orders</button>
-    <button onclick="showPage('production')" id="nav-production" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-industry mr-2"></i> Production Floor</button>
-    <button onclick="showPage('inventory')" id="nav-inventory" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-boxes-stacked mr-2"></i> Inventory - Resin</button>
-    <button onclick="showPage('qc')" id="nav-qc" class="w-full text-left p-3 rounded hover:bg-gray-800"><i class="fa-solid fa-flask mr-2"></i> QC & Rolls</button>
-  </nav>
-  <div class="absolute bottom-4 text-xs text-gray-500">ISO 9001 Ready | v1.0</div>
-</div>
-
-<!-- Main Content -->
-<div class="ml-64 flex-1 p-8">
-
-  <!-- DASHBOARD -->
-  <div id="page-dashboard" class="page">
-    <h2 class="text-3xl font-bold">Production Dashboard</h2>
-    <div class="grid grid-cols-4 gap-4 mt-6">
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Today Production</p><h3 class="text-3xl font-bold" id="kpi-kg">0 KG</h3><p class="text-green-500 text-sm">+12% vs yesterday</p></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Scrap %</p><h3 class="text-3xl font-bold text-red-500" id="kpi-scrap">2.1%</h3><p class="text-xs">Target < 3%</p></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">OEE</p><h3 class="text-3xl font-bold">84.2%</h3><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:84%"></div></div></div>
-      <div class="bg-white p-6 rounded-xl shadow"><p class="text-gray-500">Pending SO</p><h3 class="text-3xl font-bold" id="kpi-so">0</h3><p class="text-xs">Need scheduling</p></div>
-    </div>
-    <div class="bg-white mt-6 p-6 rounded-xl shadow">
-      <h3 class="font-bold mb-4">Machine Status - Extrusion Lines</h3>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="border p-4 rounded"><p class="font-bold">Line 1 - Blown Film</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 120kg/hr</span><p class="text-sm mt-2">Job: WO-1023 - 50mic PE Bag</p></div>
-        <div class="border p-4 rounded"><p class="font-bold">Line 2 - Cast Stretch</p><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">RUNNING - 180kg/hr</span><p class="text-sm mt-2">Job: WO-1024 - 23mic Stretch Film</p></div>
-        <div class="border p-4 rounded"><p class="font-bold">Line 3 - Slitter</p><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">SETUP</span><p class="text-sm mt-2">Next: WO-1025</p></div>
-      </div>
+<body>
+  <div id="auth-view" class="auth hidden">
+    <div class="brand" style="color:#10251f">RESPACK <span>ERP</span></div>
+    <h1 id="auth-title">Sign in</h1><p class="muted">Secure access to Respack manufacturing operations.</p>
+    <form id="auth-form"><label class="field">Email<input id="auth-email" type="email" autocomplete="email" required></label><label class="field" style="margin-top:12px">Password<input id="auth-password" type="password" minlength="8" autocomplete="current-password" required></label><div class="actions"><button class="btn" id="auth-submit">Sign in</button><button type="button" class="btn secondary" id="auth-toggle">Create account</button></div></form>
+    <div id="auth-message" class="notice hidden"></div><p class="footnote">Access requires an administrator to provision your Respack organization membership.</p>
+  </div>
+  <div id="app" class="shell hidden">
+    <header class="topbar"><div class="brand">RESPACK <span>ERP</span></div><div class="userbar"><span id="org-name">Loading organization…</span><span id="user-email"></span><button class="btn secondary" id="sign-out">Sign out</button></div></header>
+    <div class="layout"><aside><div class="nav-label">OPERATIONS</div><button class="nav active" data-page="dashboard">Overview</button><button class="nav" data-page="orders">Sales orders</button><button class="nav" data-page="production">Work orders</button><button class="nav" data-page="inventory">Materials & inventory</button><button class="nav" data-page="quality">Quality rolls</button></aside>
+      <main class="main">
+        <section id="page-dashboard" class="page active"><div class="page-head"><div><h1>Production overview</h1><div class="muted">Live operational data for your Respack site.</div></div><button class="btn secondary refresh">Refresh data</button></div><div id="dashboard-kpis" class="grid"></div><div class="panel"><h2>Recent work orders</h2><div id="recent-workorders" class="table-wrap"></div></div><div class="footnote">Operational status only. Verify production, inventory and quality records against source documents.</div></section>
+        <section id="page-orders" class="page"><div class="page-head"><div><h1>Sales orders</h1><div class="muted">Customer demand and product specifications.</div></div></div><div class="panel"><h2>Create sales order</h2><form id="order-form"><div class="form-grid"><label class="field">Order number<input name="order_number" required placeholder="SO-2026-001"></label><label class="field">Customer name<input name="customer_name" required></label><label class="field">Product / specification<input name="product_spec" required placeholder="Flexible packaging film"></label><label class="field">Quantity (kg)<input name="quantity_kg" type="number" min="0.01" step="0.01" required></label><label class="field">Due date<input name="due_date" type="date"></label><label class="field">Unit price (RM/kg)<input name="unit_price" type="number" min="0" step="0.01" value="0"></label><label class="field full">Notes<textarea name="notes"></textarea></label></div><div class="actions"><button class="btn">Save order</button></div></form></div><div class="panel"><div class="toolbar"><h2 style="margin:0">Order register</h2><button class="btn secondary refresh">Refresh</button></div><div id="orders-table" class="table-wrap"></div></div></section>
+        <section id="page-production" class="page"><div class="page-head"><div><h1>Production work orders</h1><div class="muted">Plan and record manufacturing output, scrap and machine assignment.</div></div></div><div class="panel"><h2>Create work order</h2><form id="workorder-form"><div class="form-grid"><label class="field">Work order number<input name="work_order_number" required placeholder="WO-2026-001"></label><label class="field">Related sales order<select name="sales_order_id" id="workorder-sales"><option value="">Not linked</option></select></label><label class="field">Machine / line<input name="machine" placeholder="Extrusion Line 1"></label><label class="field">Target (kg)<input name="target_kg" type="number" min="0.01" step="0.01" required></label><label class="field">Status<select name="status"><option value="planned">Planned</option><option value="in_progress">In progress</option><option value="on_hold">On hold</option></select></label></div><div class="actions"><button class="btn">Create work order</button></div></form></div><div class="panel"><div class="toolbar"><h2 style="margin:0">Work order register</h2><button class="btn secondary refresh">Refresh</button></div><div id="workorders-table" class="table-wrap"></div></div></section>
+        <section id="page-inventory" class="page"><div class="page-head"><div><h1>Materials & inventory</h1><div class="muted">Raw material catalog and traceable lot receipts.</div></div></div><div class="panel"><h2>Add material</h2><form id="material-form"><div class="form-grid"><label class="field">SKU<input name="sku" required></label><label class="field">Material name<input name="name" required placeholder="LDPE resin"></label><label class="field">Unit of measure<input name="unit" value="kg" required></label><label class="field">Reorder level<input name="reorder_level" type="number" min="0" step="0.01" value="0"></label></div><div class="actions"><button class="btn">Save material</button></div></form></div><div class="panel"><h2>Receive material into a new lot</h2><form id="receipt-form"><div class="form-grid"><label class="field">Material<select name="material_id" id="receipt-material" required><option value="">Select material</option></select></label><label class="field">Supplier lot / batch<input name="lot_number" required></label><label class="field">Received quantity (kg)<input name="quantity" type="number" min="0.01" step="0.01" required></label><label class="field">Unit cost (RM/kg)<input name="unit_cost" type="number" min="0" step="0.0001" value="0" required></label></div><div class="actions"><button class="btn">Record receipt</button></div></form></div><div class="panel"><div class="toolbar"><h2 style="margin:0">Current material lots</h2><button class="btn secondary refresh">Refresh</button></div><div id="inventory-table" class="table-wrap"></div></div></section>
+        <section id="page-quality" class="page"><div class="page-head"><div><h1>Quality & roll traceability</h1><div class="muted">Record measured roll results against a work order.</div></div></div><div class="panel"><h2>Record finished roll</h2><form id="roll-form"><div class="form-grid"><label class="field">Barcode / roll ID<input name="barcode" required></label><label class="field">Work order<select name="work_order_id" id="roll-workorder" required><option value="">Select work order</option></select></label><label class="field">Net weight (kg)<input name="weight_kg" type="number" min="0.01" step="0.01" required></label><label class="field">Measured thickness (micron)<input name="thickness_micron" type="number" min="0" step="0.1"></label><label class="field">Inspection result<select name="result"><option value="pass">Pass</option><option value="fail">Fail</option><option value="hold">Hold</option></select></label><label class="field">Inspector<input name="inspector"></label><label class="field full">Notes<textarea name="notes"></textarea></label></div><div class="actions"><button class="btn">Save QC record</button></div></form></div><div class="panel"><div class="toolbar"><h2 style="margin:0">Recent QC rolls</h2><button class="btn secondary refresh">Refresh</button></div><div id="quality-table" class="table-wrap"></div></div></section>
+      </main>
     </div>
   </div>
-
-  <!-- QUOTATION -->
-  <div id="page-quotation" class="page hidden">
-    <h2 class="text-3xl font-bold">Quotation Calculator - Respack Formula</h2>
-    <div class="grid grid-cols-2 gap-8 mt-6">
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="grid grid-cols-2 gap-4">
-          <label>Width (mm)<input id="q-width" type="number" value="1000" class="w-full border p-2 rounded mt-1"></label>
-          <label>Length (mm)<input id="q-length" type="number" value="1500" class="w-full border p-2 rounded mt-1"></label>
-          <label>Micron (µ)<input id="q-micron" type="number" value="50" class="w-full border p-2 rounded mt-1"></label>
-          <label>Qty (pcs)<input id="q-qty" type="number" value="5000" class="w-full border p-2 rounded mt-1"></label>
-          <label>Resin Price RM/kg<input id="q-resin" type="number" value="5.2" step="0.1" class="w-full border p-2 rounded mt-1"></label>
-          <label>Margin %<input id="q-margin" type="number" value="25" class="w-full border p-2 rounded mt-1"></label>
-        </div>
-        <button onclick="calcQuote()" class="mt-6 bg-blue-600 text-white w-full p-3 rounded font-bold">Calculate & Create SO</button>
-      </div>
-      <div class="bg-black text-white p-6 rounded-xl">
-        <h3 class="font-bold text-xl mb-4">Cost Breakdown</h3>
-        <div class="space-y-3 text-lg">
-          <p class="flex justify-between"><span>Weight / pc:</span><b id="r-weight">0 g</b></p>
-          <p class="flex justify-between"><span>Total KG:</span><b id="r-totalkg" class="text-yellow-400">0 KG</b></p>
-          <p class="flex justify-between"><span>Material Cost:</span><b id="r-cost">RM 0</b></p>
-          <hr class="border-gray-700">
-          <p class="flex justify-between text-2xl"><span>Sell Price:</span><b id="r-sell" class="text-green-400">RM 0</b></p>
-          <p class="flex justify-between"><span>Per pc:</span><b id="r-perpc">RM 0</b></p>
-        </div>
-        <button onclick="createSOFromQuote()" class="mt-6 bg-white text-black w-full p-2 rounded font-bold">+ Add to Sales Orders</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SALES -->
-  <div id="page-sales" class="page hidden">
-    <div class="flex justify-between"><h2 class="text-3xl font-bold">Sales Orders</h2><button onclick="addDummySO()" class="bg-blue-600 text-white px-4 py-2 rounded">+ New SO</button></div>
-    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
-      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">SO No</th><th class="p-3">Customer</th><th class="p-3">Spec</th><th class="p-3">KG</th><th class="p-3">Amount</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="sales-body"></tbody></table>
-    </div>
-  </div>
-
-  <!-- PRODUCTION -->
-  <div id="page-production" class="page hidden">
-    <h2 class="text-3xl font-bold">Work Orders - Production Floor</h2>
-    <div class="bg-white mt-6 rounded-xl shadow overflow-hidden">
-      <table class="w-full text-left"><thead class="bg-gray-100"><tr><th class="p-3">WO No</th><th class="p-3">SO No</th><th class="p-3">Machine</th><th class="p-3">Target</th><th class="p-3">Produced</th><th class="p-3">Scrap</th><th class="p-3">Action</th></tr></thead><tbody id="prod-body"></tbody></table>
-    </div>
-  </div>
-
-  <!-- INVENTORY -->
-  <div id="page-inventory" class="page hidden">
-    <h2 class="text-3xl font-bold">Raw Material Inventory - Resin & Masterbatch</h2>
-    <div class="grid grid-cols-3 gap-4 mt-6" id="inv-cards"></div>
-  </div>
-
-  <!-- QC -->
-  <div id="page-qc" class="page hidden">
-    <h2 class="text-3xl font-bold">QC - Roll Tracking & Barcode</h2>
-    <div class="bg-white mt-6 p-6 rounded-xl shadow">
-      <div class="flex gap-4"><input id="qc-barcode" placeholder="Scan barcode e.g. ROLL-2024-001" class="border p-3 rounded flex-1"><button onclick="addRoll()" class="bg-black text-white px-6 rounded">Add Roll</button></div>
-      <table class="w-full mt-6 text-left"><thead class="bg-gray-100"><tr><th class="p-3">Barcode</th><th class="p-3">WO No</th><th class="p-3">Weight</th><th class="p-3">Micron Actual</th><th class="p-3">QC</th></tr></thead><tbody id="qc-body"></tbody></table>
-    </div>
-  </div>
-
-</div>
-
-<script>
-// --- Data Storage ---
-let salesOrders = JSON.parse(localStorage.getItem('respack_so') || '[]');
-let workOrders = JSON.parse(localStorage.getItem('respack_wo') || '[]');
-let rolls = JSON.parse(localStorage.getItem('respack_rolls') || '[]');
-let inventory = [
-  {name:'LDPE', lot:'LDPE-24-001', qty: 5250, cost: 5.1, supplier:'Petronas'},
-  {name:'LLDPE', lot:'LLDPE-24-002', qty: 3100, cost: 5.3, supplier:'Lotus'},
-  {name:'HDPE', lot:'HDPE-24-003', qty: 1800, cost: 5.0, supplier:'Petronas'},
-  {name:'MB White', lot:'MB-W-001', qty: 450, cost: 8.2, supplier:'Tosaf'},
-  {name:'MB Black', lot:'MB-B-001', qty: 200, cost: 8.5, supplier:'Tosaf'},
-  {name:'Papercore 3 inch', lot:'PC-001', qty: 1200, cost: 1.2, supplier:'Local'},
-];
-
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-  document.getElementById('page-'+id).classList.remove('hidden');
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sidebar-active'));
-  document.getElementById('nav-'+id).classList.add('sidebar-active');
-  renderAll();
-}
-
-function calcQuote(){
-  const w=+document.getElementById('q-width').value;
-  const l=+document.getElementById('q-length').value;
-  const m=+document.getElementById('q-micron').value;
-  const qty=+document.getElementById('q-qty').value;
-  const resin=+document.getElementById('q-resin').value;
-  const margin=+document.getElementById('q-margin').value;
-  const density=0.92;
-  const weightPerPc = (w*l*m*density*2)/10000000000;
-  const totalKg = weightPerPc*qty;
-  const cost = totalKg*resin;
-  const sell = cost*(1+margin/100);
-  document.getElementById('r-weight').innerText = (weightPerPc*1000).toFixed(1)+' g';
-  document.getElementById('r-totalkg').innerText = totalKg.toFixed(2)+' KG';
-  document.getElementById('r-cost').innerText = 'RM '+cost.toFixed(2);
-  document.getElementById('r-sell').innerText = 'RM '+sell.toFixed(2);
-  document.getElementById('r-perpc').innerText = 'RM '+(sell/qty).toFixed(4);
-  return {w,l,m,qty,totalKg,sell};
-}
-
-function createSOFromQuote(){
-  const q=calcQuote();
-  const soNo='SO-'+(1000+salesOrders.length+1);
-  salesOrders.unshift({soNo, customer:'New Customer - Food Packaging', spec: `${q.w}x${q.l}x${q.m}µ`, kg:q.totalKg.toFixed(2), amount:q.sell.toFixed(2), status:'PENDING'});
-  const woNo='WO-'+(1000+workOrders.length+1);
-  workOrders.unshift({woNo, soNo, machine:'Extruder Line 1', target:q.totalKg.toFixed(2), produced:'0', scrap:'0'});
-  save(); showPage('sales'); alert('Sales Order '+soNo+' & Work Order '+woNo+' created!');
-}
-
-function addDummySO(){
-  salesOrders.unshift({soNo:'SO-'+(1000+salesOrders.length+1), customer:'Lotus Foods Sdn Bhd', spec:'800x1200x40µ', kg:(Math.random()*1000+200).toFixed(2), amount:(Math.random()*5000+1000).toFixed(2), status:'PENDING'});
-  save(); renderAll();
-}
-
-function save(){
-  localStorage.setItem('respack_so', JSON.stringify(salesOrders));
-  localStorage.setItem('respack_wo', JSON.stringify(workOrders));
-  localStorage.setItem('respack_rolls', JSON.stringify(rolls));
-}
-
-function renderAll(){
-  document.getElementById('sales-body').innerHTML = salesOrders.map(s=>`<tr class="border-b"><td class="p-3 font-bold">${s.soNo}</td><td class="p-3">${s.customer}</td><td class="p-3">${s.spec}</td><td class="p-3">${s.kg} KG</td><td class="p-3">RM ${s.amount}</td><td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${s.status}</span></td><td class="p-3"><button onclick="convertToProd('${s.soNo}')" class="text-blue-600">→ Production</button></td></tr>`).join('') || '<tr><td colspan=7 class="p-6 text-center text-gray-400">No orders yet. Use Quotation Calculator.</td></tr>';
-  document.getElementById('prod-body').innerHTML = workOrders.map(w=>`<tr class="border-b"><td class="p-3 font-bold">${w.woNo}</td><td class="p-3">${w.soNo}</td><td class="p-3">${w.machine}</td><td class="p-3">${w.target} KG</td><td class="p-3"><input type="number" value="${w.produced}" onchange="updateProd('${w.woNo}', 'produced', this.value)" class="w-20 border p-1"></td><td class="p-3"><input type="number" value="${w.scrap}" onchange="updateProd('${w.woNo}', 'scrap', this.value)" class="w-20 border p-1"></td><td class="p-3"><button onclick="completeWO('${w.woNo}')" class="bg-green-600 text-white px-3 py-1 rounded text-xs">Complete</button></td></tr>`).join('');
-  document.getElementById('inv-cards').innerHTML = inventory.map(i=>`<div class="bg-white p-4 rounded-xl shadow"><p class="font-bold">${i.name}</p><p class="text-xs text-gray-500">${i.lot} | ${i.supplier}</p><p class="text-2xl font-bold mt-2">${i.qty} KG</p><p class="text-sm">RM ${i.cost}/kg | Value RM ${(i.qty*i.cost).toFixed(2)}</p><div class="w-full bg-gray-200 h-2 rounded mt-2"><div class="bg-blue-600 h-2 rounded" style="width:${Math.min(i.qty/50,100)}%"></div></div></div>`).join('');
-  document.getElementById('qc-body').innerHTML = rolls.map(r=>`<tr class="border-b"><td class="p-3 font-mono">${r.barcode}</td><td class="p-3">${r.woNo}</td><td class="p-3">${r.weight} KG</td><td class="p-3">${r.micron} µ</td><td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">${r.qc}</span></td></tr>`).join('') || '<tr><td colspan=5 class="p-6 text-center text-gray-400">No rolls scanned</td></tr>';
-  document.getElementById('kpi-kg').innerText = workOrders.reduce((a,b)=>a+parseFloat(b.produced||0),0).toFixed(0)+' KG';
-  document.getElementById('kpi-so').innerText = salesOrders.length;
-}
-
-function convertToProd(soNo){ showPage('production'); }
-function updateProd(woNo, field, val){ const w=workOrders.find(x=>x.woNo==woNo); w[field]=val; save(); }
-function completeWO(woNo){ alert(woNo+' marked complete, ready for QC'); }
-function addRoll(){
-  const code=document.getElementById('qc-barcode').value || 'ROLL-'+Date.now();
-  const woNo=workOrders[0]?.woNo || 'WO-1001';
-  rolls.unshift({barcode:code, woNo, weight:(Math.random()*50+20).toFixed(1), micron:(48+Math.random()*4).toFixed(1), qc:'PASS'});
-  save(); renderAll(); document.getElementById('qc-barcode').value='';
-}
-calcQuote(); renderAll();
-</script>
+  <div id="global-message" class="notice hidden" style="position:fixed;bottom:18px;right:18px;max-width:440px;box-shadow:0 8px 28px #17231e22"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+  (()=>{
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    const esc=v=>String(v??''); let client=null, org=null, orders=[], workOrders=[], materials=[];
+    function message(text,error=false,where='#global-message'){const box=$(where);box.textContent=text;box.classList.remove('hidden','error');if(error)box.classList.add('error');if(where==='#global-message')setTimeout(()=>box.classList.add('hidden'),6500)}
+    function showAuth(text=''){ $('#auth-view').classList.remove('hidden');$('#app').classList.add('hidden'); if(text)message(text,true,'#auth-message');else $('#auth-message').classList.add('hidden') }
+    function showApp(){ $('#auth-view').classList.add('hidden');$('#app').classList.remove('hidden');$('#user-email').textContent=client.auth.getUser ? '' : '' }
+    function cell(tr,value){const td=document.createElement('td');td.textContent=esc(value);tr.append(td);return td}
+    function table(target,headers,rows,empty='No records yet.'){const root=$(target);root.replaceChildren();if(!rows.length){const p=document.createElement('div');p.className='empty';p.textContent=empty;root.append(p);return}const t=document.createElement('table'),thead=document.createElement('thead'),hr=document.createElement('tr');headers.forEach(h=>cell(hr,h));thead.append(hr);t.append(thead);const body=document.createElement('tbody');rows.forEach(row=>{const tr=document.createElement('tr');row.forEach((v,i)=>{const td=cell(tr,v);if(i===row.length-1&&['planned','in_progress','on_hold','complete','pending','pass','fail','hold'].includes(String(v).toLowerCase())){td.replaceChildren();const b=document.createElement('span');b.className='status '+String(v).toLowerCase();b.textContent=String(v).replaceAll('_',' ');td.append(b)}});body.append(tr)});t.append(body);root.append(t)}
+    function kpi(label,value){const c=document.createElement('div');c.className='card';const l=document.createElement('div');l.className='kpi-label';l.textContent=label;const v=document.createElement('div');v.className='kpi-value';v.textContent=value;c.append(l,v);return c}
+    function formData(form){return Object.fromEntries(new FormData(form).entries())}
+    async function checked(promise){const {data,error}=await promise;if(error)throw error;return data}
+    async function start(){if(!window.RESPACK_CONFIG?.supabaseUrl||!window.RESPACK_CONFIG?.supabaseAnonKey||!window.supabase){showAuth('Configure Supabase in config.js before using the ERP.');return}client=window.supabase.createClient(window.RESPACK_CONFIG.supabaseUrl,window.RESPACK_CONFIG.supabaseAnonKey);const {data:{session}}=await client.auth.getSession();if(!session){showAuth();return}await loadOrganization(session.user)}
+    async function loadOrganization(user){$('#user-email').textContent=user.email||'';try{const memberships=await checked(client.from('organization_members').select('organization_id,role,organizations(name)').eq('user_id',user.id));if(!memberships.length){showAuth('Your account is not assigned to a Respack organization yet. Ask an administrator to provision your membership.');return}org=memberships[0];$('#org-name').textContent=org.organizations?.name||'Respack';showApp();await refresh()}catch(e){showAuth('Could not load your organization: '+e.message)}}
+    async function refresh(){if(!client||!org)return;try{[orders,workOrders,materials]=await Promise.all([checked(client.from('sales_orders').select('*').eq('organization_id',org.organization_id).order('created_at',{ascending:false})),checked(client.from('work_orders').select('*, sales_orders(order_number)').eq('organization_id',org.organization_id).order('created_at',{ascending:false})),checked(client.from('materials').select('*').eq('organization_id',org.organization_id).order('name'))]);const lots=await checked(client.from('inventory_lots').select('*, materials(name,sku)').eq('organization_id',org.organization_id).order('received_at',{ascending:false}));const rolls=await checked(client.from('quality_rolls').select('*, work_orders(work_order_number)').eq('organization_id',org.organization_id).order('created_at',{ascending:false}).limit(100));render(orders,workOrders,materials,lots,rolls)}catch(e){message('Unable to load ERP data: '+e.message,true)}}
+    function render(o,w,m,lots,rolls){const dash=$('#dashboard-kpis');dash.replaceChildren(kpi('Open sales orders',String(o.filter(x=>!['completed','cancelled'].includes(x.status)).length)),kpi('Active work orders',String(w.filter(x=>['in_progress','planned'].includes(x.status)).length)),kpi('Production output',w.reduce((a,x)=>a+Number(x.produced_kg||0),0).toFixed(1)+' kg'),kpi('Inventory lots',String(lots.length)));table('#recent-workorders',['Work order','Sales order','Machine','Target kg','Produced kg','Status'],w.slice(0,8).map(x=>[x.work_order_number,x.sales_orders?.order_number||'—',x.machine||'—',x.target_kg,x.produced_kg,x.status]));table('#orders-table',['Order','Customer','Product / spec','Quantity kg','Due','Status'],o.map(x=>[x.order_number,x.customer_name,x.product_spec,x.quantity_kg,x.due_date||'—',x.status]));table('#workorders-table',['Work order','Sales order','Machine','Target kg','Produced kg','Scrap kg','Status'],w.map(x=>[x.work_order_number,x.sales_orders?.order_number||'—',x.machine||'—',x.target_kg,x.produced_kg,x.scrap_kg,x.status]));table('#inventory-table',['SKU','Material','Lot','On hand kg','Unit cost RM/kg','Received'],lots.map(x=>[x.materials?.sku||'—',x.materials?.name||'—',x.lot_number,x.quantity_on_hand,x.unit_cost,x.received_at?.slice(0,10)]));table('#quality-table',['Barcode','Work order','Weight kg','Thickness µm','Result','Inspector'],rolls.map(x=>[x.barcode,x.work_orders?.work_order_number||'—',x.weight_kg,x.thickness_micron??'—',x.result,x.inspector||'—']));const os=$('#workorder-sales');os.replaceChildren(new Option('Not linked',''));o.forEach(x=>os.add(new Option(x.order_number+' — '+x.customer_name,x.id)));const ms=$('#receipt-material');ms.replaceChildren(new Option('Select material',''));m.forEach(x=>ms.add(new Option(x.sku+' — '+x.name,x.id)));const ws=$('#roll-workorder');ws.replaceChildren(new Option('Select work order',''));w.forEach(x=>ws.add(new Option(x.work_order_number,x.id)))}
+    async function submit(form,fn){form.addEventListener('submit',async e=>{e.preventDefault();const button=form.querySelector('button[type="submit"]')||form.querySelector('button');button.disabled=true;try{await fn(formData(form));form.reset();message('Saved successfully.');await refresh()}catch(err){message(err.message||'Save failed.',true)}finally{button.disabled=false}})}
+    $('#auth-form').addEventListener('submit',async e=>{e.preventDefault();if(!client){message('Supabase is not configured.',true,'#auth-message');return}const email=$('#auth-email').value,password=$('#auth-password').value;try{const result=$('#auth-title').textContent==='Create account'?await client.auth.signUp({email,password}):await client.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(result.data.user&&!result.data.session&&$('#auth-title').textContent==='Create account'){message('Check your email to confirm your account, then ask an administrator to add you to the organization.','#auth-message');return}await loadOrganization(result.data.user)}catch(err){message(err.message,true,'#auth-message')}});
+    $('#auth-toggle').addEventListener('click',()=>{const signup=$('#auth-title').textContent!=='Create account';$('#auth-title').textContent=signup?'Create account':'Sign in';$('#auth-submit').textContent=signup?'Create account':'Sign in';$('#auth-toggle').textContent=signup?'Back to sign in':'Create account'});
+    $('#sign-out').addEventListener('click',async()=>{await client.auth.signOut();org=null;showAuth()});$$('.nav').forEach(b=>b.addEventListener('click',()=>{$$('.nav').forEach(n=>n.classList.toggle('active',n===b));$$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+b.dataset.page))}));$$('.refresh').forEach(b=>b.addEventListener('click',refresh));
+    submit($('#order-form'),async d=>checked(client.from('sales_orders').insert({organization_id:org.organization_id,order_number:d.order_number,customer_name:d.customer_name,product_spec:d.product_spec,quantity_kg:Number(d.quantity_kg),due_date:d.due_date||null,unit_price:Number(d.unit_price||0),notes:d.notes||null,created_by:(await client.auth.getUser()).data.user.id})));
+    submit($('#workorder-form'),async d=>checked(client.from('work_orders').insert({organization_id:org.organization_id,work_order_number:d.work_order_number,sales_order_id:d.sales_order_id||null,machine:d.machine||null,target_kg:Number(d.target_kg),status:d.status,created_by:(await client.auth.getUser()).data.user.id})));
+    submit($('#material-form'),async d=>checked(client.from('materials').insert({organization_id:org.organization_id,sku:d.sku,name:d.name,unit:d.unit,reorder_level:Number(d.reorder_level||0)})));
+    submit($('#receipt-form'),async d=>checked(client.rpc('receive_material',{p_organization_id:org.organization_id,p_material_id:d.material_id,p_lot_number:d.lot_number,p_quantity:Number(d.quantity),p_unit_cost:Number(d.unit_cost)})));
+    submit($('#roll-form'),async d=>checked(client.from('quality_rolls').insert({organization_id:org.organization_id,work_order_id:d.work_order_id,barcode:d.barcode,weight_kg:Number(d.weight_kg),thickness_micron:d.thickness_micron?Number(d.thickness_micron):null,result:d.result,inspector:d.inspector||null,notes:d.notes||null,created_by:(await client.auth.getUser()).data.user.id})));
+    clientReady();function clientReady(){if(window.RESPACK_CONFIG?.supabaseUrl&&window.RESPACK_CONFIG?.supabaseAnonKey&&window.supabase)start();else showAuth('Set your Supabase project URL and publishable anon key in config.js. The key is safe to expose only when database RLS is enabled.')} 
+  })();
+  </script>
 </body>
 </html>
